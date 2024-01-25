@@ -54,9 +54,12 @@ create-customer:
     limit-rows: 200
 
 cdnet:
-  client-id: 17-ALMEIDA-ELZA
-  username: REST
-  password: A121930@
-  client-secret: b3e82ac0-64d2-4a57-9879-a1441c0b6b36
-  authentication-server-url: https://login.rommanel.com.br
-  base-server-url: https://distribuidor.cdnetweb.com.br
+  grant-type: ${CDNET_GRANT_TYPE:password}
+  client-id: ${CDNET_CLIENT_ID:17-ALMEIDA-ELZA}
+  username: ${CDNET_USER:REST}
+  password: ${CDNET_PASS:A121930@}
+  client-secret: ${CDNET_CLIENT_SECRET:b3e82ac0-64d2-4a57-9879-a1441c0b6b36}
+  authentication-server-url: ${CDNET_AUTH_URL:https://login.rommanel.com.br}
+  base-server-url: ${CDNET_BASE_URL:https://distribuidor.cdnetweb.com.br}
+  identification:
+    mario-covas: ${CDNET_IDENTIFICATION_MARIO_COVAS:16694776000784}

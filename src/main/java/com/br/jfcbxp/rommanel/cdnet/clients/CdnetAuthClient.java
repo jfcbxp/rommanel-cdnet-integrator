@@ -23,7 +23,7 @@ public interface CdnetAuthClient {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    AuthRecordResponse getToken2(
+    AuthRecordResponse getToken(
             @RequestBody
             Map<String, ?> params);
 }
