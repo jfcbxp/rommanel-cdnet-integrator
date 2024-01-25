@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class ProductInventoryConverter extends AbstractConverter<ProductInventory, CdNetInventoryRequest> {
-    @Value("${cdnet.identification.mario-covas}")
+    @Value("${cdnet.mario-covas.identification}")
     private String identification;
 
     @Override
@@ -24,7 +24,7 @@ public class ProductInventoryConverter extends AbstractConverter<ProductInventor
         var date = ZonedDateTime.now(ZoneId.of(CdnetInternalParams.ZONE_ID));
         var integrationDate = date.format(DateTimeFormatter.ofPattern(CdnetInternalParams.INTEGRATION_DATE_FORMAT));
 
-        return new CdNetInventoryRequest(BigInteger.ONE, identification, BigInteger.ONE, integrationDate);
+        return new CdNetInventoryRequest(new BigInteger(productInventory.getCodigo().trim()), identification, productInventory.getEstoque().toBigInteger(), integrationDate);
 
     }
 }

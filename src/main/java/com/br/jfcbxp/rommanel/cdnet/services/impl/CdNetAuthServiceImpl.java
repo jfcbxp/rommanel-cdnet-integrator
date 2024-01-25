@@ -4,12 +4,14 @@ import com.br.jfcbxp.rommanel.cdnet.clients.CdnetAuthClient;
 import com.br.jfcbxp.rommanel.cdnet.configs.CdnetProperties;
 import com.br.jfcbxp.rommanel.cdnet.services.CdnetAuthService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CdNetAuthServiceImpl implements CdnetAuthService {
     private static final String GRANT_TYPE = "grant_type";
     private static final String CLIENT_ID = "client_id";
@@ -22,6 +24,8 @@ public class CdNetAuthServiceImpl implements CdnetAuthService {
 
     @Override
     public String getToken() {
+        log.info("CdNetAuthServiceImpl.getToken - Start");
+
         HashMap<String, String> params = new HashMap<>();
 
         params.put(GRANT_TYPE, properties.getGrantType());
@@ -32,8 +36,12 @@ public class CdNetAuthServiceImpl implements CdnetAuthService {
 
         var response = client.getToken(params);
 
+        log.info("CdNetAuthServiceImpl.getToken - End");
+
         return response.tokenType()
                 .concat(" ")
                 .concat(response.accessToken());
+
+
     }
 }

@@ -30,4 +30,15 @@ public interface CdnetInventoryClient {
             String token,
             @RequestBody
             List<CdNetInventoryRequest> inventoryRequests);
+
+    @PutMapping(
+            value = "/UpdateInventory",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    InventoryRecordResponse updateInventory(
+            @RequestHeader("Authorization")
+            String token,
+            @RequestBody
+            CdNetInventoryRequest inventoryRequests);
 }

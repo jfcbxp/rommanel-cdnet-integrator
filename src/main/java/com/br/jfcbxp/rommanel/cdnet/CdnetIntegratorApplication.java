@@ -2,12 +2,14 @@ package com.br.jfcbxp.rommanel.cdnet;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableFeignClients
 public class CdnetIntegratorApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CdnetIntegratorApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CdnetIntegratorApplication.class, args);
+    }
 
 }

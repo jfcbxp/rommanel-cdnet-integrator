@@ -27,7 +27,7 @@ public interface ProductInventoryRepository extends JpaRepository<ProductInvento
             nativeQuery = true
     )
     void updateIntegration(
-            @Param("produto")
+            @Param("codigo")
             String codigo,
             @Param("armazem")
             String armazem,

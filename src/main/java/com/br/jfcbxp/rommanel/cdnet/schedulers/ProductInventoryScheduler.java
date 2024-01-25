@@ -15,24 +15,29 @@ public class ProductInventoryScheduler {
 
     private final CdnetInventoryService service;
 
-
-    @Value("${create-customer.scheduler.least-lock-time}")
+    @Value("${update-inventory.scheduler.least-lock-time}")
     private String leastLockTimeString;
 
+    @Value("${cdnet.mario-covas.code}")
+    private String empresa;
+
+    @Value("${cdnet.mario-covas.warehouse}")
+    private String armazem;
+
     @Scheduled(
-            cron = "${create-customer.scheduler.cron-value}",
+            cron = "${update-inventory.scheduler.cron-value}",
             zone = "America/Sao_Paulo"
     )
     @SchedulerLock(
-            name = "REPROCESS_EVENTS",
-            lockAtLeastFor = "${create-customer.scheduler.least-lock-time}",
-            lockAtMostFor = "${create-customer.scheduler.most-lock-time}"
+            name = "PRODUCT_INVENTORY",
+            lockAtLeastFor = "${update-inventory.scheduler.least-lock-time}",
+            lockAtMostFor = "${update-inventory.scheduler.most-lock-time}"
     )
     public void checkOutOfSyncProducts() {
         var start = System.currentTimeMillis();
         try {
             log.info("CdnetInventoryService.checkOutOfSyncProducts - Start");
-            service.updateInventoryList();
+            service.updateInventory(empresa, armazem);
 
         } finally {
             log.info("CdnetInventoryService.checkOutOfSyncProducts - End - took [{}ms]", (System.currentTimeMillis() - start));

@@ -4,7 +4,7 @@ server:
 spring:
   application:
     name: cdnet-integrator
-      
+
   datasource:
     url: jdbc:sqlserver://${MSSQLDB_HOST:192.168.0.61}:${MSSQLDB_PORT:1433};databaseName=${MSSQLDB_DBNAME:PROTHEUS};trustServerCertificate=false;encrypt=false;
     username: ${MSSQLDB_USERNAME:sa}
@@ -40,11 +40,11 @@ management:
 schedulers:
   default-most-lock-time: PT30M
 
-create-customer:
+update-inventory:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${CRON_VALUE:0 * * * * *}
+    cron-value: ${CRON_VALUE:0 0/10 * * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
@@ -57,5 +57,7 @@ cdnet:
   client-secret: ${CDNET_CLIENT_SECRET:b3e82ac0-64d2-4a57-9879-a1441c0b6b36}
   authentication-server-url: ${CDNET_AUTH_URL:https://login.rommanel.com.br}
   base-server-url: ${CDNET_BASE_URL:https://distribuidor.cdnetweb.com.br}
-  identification:
-    mario-covas: ${CDNET_IDENTIFICATION_MARIO_COVAS:16694776000784}
+  mario-covas:
+    identification: ${CDNET_IDENTIFICATION_MARIO_COVAS:16694776000784}
+    code: "0107"
+    warehouse: "01"
