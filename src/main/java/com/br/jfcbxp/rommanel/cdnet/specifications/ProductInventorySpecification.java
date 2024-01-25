@@ -9,12 +9,13 @@ import org.springframework.data.jpa.domain.Specification;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductInventorySpecification {
 
-    private static final String HORA_INTEGRACAO = "horaIntegracao";
+    private static final String ESTOQUE_VTEX = "estoqueVtex";
+    private static final String ESTOQUE = "estoque";
 
     public static Specification<ProductInventory> findByCriteria() {
         return (root, query, cb) -> {
 
-            return cb.equal(root.get(HORA_INTEGRACAO), "");
+            return cb.notEqual(root.get(ESTOQUE_VTEX), root.get(ESTOQUE));
         };
     }
 }

@@ -1,41 +1,49 @@
 package com.br.jfcbxp.rommanel.cdnet.services.impl;
 
 import com.br.jfcbxp.rommanel.cdnet.clients.CdnetInventoryClient;
+import com.br.jfcbxp.rommanel.cdnet.constants.CdnetInternalParams;
 import com.br.jfcbxp.rommanel.cdnet.records.requests.CdNetInventoryRequest;
+import com.br.jfcbxp.rommanel.cdnet.repositorys.ProductInventoryRepository;
 import com.br.jfcbxp.rommanel.cdnet.services.CdnetAuthService;
 import com.br.jfcbxp.rommanel.cdnet.services.CdnetInventoryService;
+import com.br.jfcbxp.rommanel.cdnet.specifications.ProductInventorySpecification;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CdNetInventoryServiceImpl implements CdnetInventoryService {
 
-    private static final String ZONE_ID = "UTC-3";
-    private static final String INTEGRATION_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
     private final CdnetInventoryClient client;
     private final CdnetAuthService authService;
+    private final ProductInventoryRepository repository;
+    private final ModelMapper mapper;
 
-    @Value("${cdnet.identification.mario-covas}")
-    private String identification;
 
     @Override
     public void updateInventoryList() {
-        var date = ZonedDateTime.now(ZoneId.of(ZONE_ID));
-        var integrationDate = date.format(DateTimeFormatter.ofPattern(INTEGRATION_DATE_FORMAT));
+        client.updateInventoryList(authService.getToken(), this.findOutOfSyncProducts());
+        
+    }
 
-        var request = new CdNetInventoryRequest(BigInteger.ONE, identification, BigInteger.ONE, integrationDate);
+    private List<CdNetInventoryRequest> findOutOfSyncProducts() {
+        log.info("CdNetInventoryServiceImpl.findOutOfSyncProducts - Start");
 
-        var token = authService.getToken();
+        var sortBy = Sort.by(Sort.Direction.valueOf(CdnetInternalParams.PAGINATE_SORT_DIRECTION_DEFAULT),
+                CdnetInternalParams.PAGINATE_SORT_PROPERTIES_DEFAULT);
 
-        var response = client.updateInventoryList(token, List.of(request));
+        var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
+
+        return repository.findAll(ProductInventorySpecification.findByCriteria(),
+                page).stream().map(productInventory -> mapper.map(productInventory, CdNetInventoryRequest.class)).toList();
 
 
     }
