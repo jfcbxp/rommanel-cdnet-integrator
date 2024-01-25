@@ -43,9 +43,17 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
                 page).stream().forEach(productInventory -> {
                     var product = mapper.map(productInventory, CdNetInventoryRequest.class);
                     var response = client.updateInventory(token, product);
-                    if (response.success())
+                    if (response.success()) {
                         repository.updateIntegration(productInventory.getCodigo(), productInventory.getArmazem(),
                                 productInventory.getEmpresa(), productInventory.getEstoque());
+                    } else {
+                        log.info("CdNetInventoryServiceImpl.updateInventory - unsuccessful integration for product {} - code {} - message: {}, data {}",
+                                product.fullProductId(), response.statusCode(), response.message(), response.data());
+
+                        
+                    }
+
+
                 }
 
         );
@@ -81,7 +89,7 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
                 CdnetInternalParams.PAGINATE_SORT_PROPERTIES_DEFAULT);
 
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
-        
+
         return repository.findAll(ProductInventorySpecification.findByCriteria(empresa, armazem, true),
                 page).stream().map(productInventory -> {
             repository.updateIntegration(productInventory.getCodigo(), productInventory.getArmazem(),
