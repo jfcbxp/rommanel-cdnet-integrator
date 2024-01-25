@@ -1,6 +1,6 @@
 package com.br.jfcbxp.rommanel.cdnet.clients;
 
-import com.br.jfcbxp.rommanel.cdnet.configs.CdnetAuthFeignConfig;
+import com.br.jfcbxp.rommanel.cdnet.configs.CdNetFeignConfig;
 import com.br.jfcbxp.rommanel.cdnet.records.responses.AuthRecordResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -14,7 +14,7 @@ import java.util.Map;
         value = "cdnet-auth-client",
         url = "${cdnet.authentication-server-url}",
         path = "/connect",
-        configuration = CdnetAuthFeignConfig.class
+        configuration = CdNetFeignConfig.class
 )
 public interface CdnetAuthClient {
 

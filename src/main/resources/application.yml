@@ -4,11 +4,7 @@ server:
 spring:
   application:
     name: cdnet-integrator
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
-      -
+      
   datasource:
     url: jdbc:sqlserver://${MSSQLDB_HOST:192.168.0.61}:${MSSQLDB_PORT:1433};databaseName=${MSSQLDB_DBNAME:PROTHEUS};trustServerCertificate=false;encrypt=false;
     username: ${MSSQLDB_USERNAME:sa}

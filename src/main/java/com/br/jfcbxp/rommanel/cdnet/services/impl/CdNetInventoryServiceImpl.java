@@ -33,7 +33,10 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
 
         var request = new CdNetInventoryRequest(BigInteger.ONE, identification, BigInteger.ONE, integrationDate);
 
-        client.updateInventoryList(authService.getToken(), List.of(request));
+        var token = authService.getToken();
+
+        var response = client.updateInventoryList(token, List.of(request));
+
 
     }
 }
