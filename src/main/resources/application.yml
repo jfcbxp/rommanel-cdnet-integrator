@@ -1,0 +1,62 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: cdnet-integrator
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      -
+  datasource:
+    url: jdbc:sqlserver://${MSSQLDB_HOST:192.168.0.61}:${MSSQLDB_PORT:1433};databaseName=${MSSQLDB_DBNAME:PROTHEUS};trustServerCertificate=false;encrypt=false;
+    username: ${MSSQLDB_USERNAME:sa}
+    password: ${MSSQLDB_PASSWORD:Panopreto121930}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+      dialect: org.hibernate.dialect.SQLServer2012Dialect
+
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+    out-of-order: true
+    ignore-missing-migrations: true
+    baseline-version: 0
+    table: flyway_schema_history_cdnet_integrator
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: beans,env
+  endpoint:
+    health:
+      show-details: always
+
+schedulers:
+  default-most-lock-time: PT30M
+
+create-customer:
+  max-retires: 10
+  pulse-interval: 5
+  scheduler:
+    cron-value: ${CRON_VALUE:0 * * * * *}
+    least-lock-time: PT30s
+    most-lock-time: PT1M
+    limit-rows: 200
+
+cdnet:
+  client-id: 17-ALMEIDA-ELZA
+  username: REST
+  password: A121930@
+  client-secret: b3e82ac0-64d2-4a57-9879-a1441c0b6b36
+  authentication-server-url: https://login.rommanel.com.br
+  base-server-url: https://distribuidor.cdnetweb.com.br
