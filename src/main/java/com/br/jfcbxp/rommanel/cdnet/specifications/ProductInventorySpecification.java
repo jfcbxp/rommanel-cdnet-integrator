@@ -13,22 +13,22 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductInventorySpecification {
 
-    private static final String ESTOQUE_VTEX = "estoqueVtex";
-    private static final String ESTOQUE = "estoque";
-    private static final String ARMAZEM = "armazem";
-    private static final String EMPRESA = "empresa";
+    private static final String ONLINE_STOCK = "onlineStock";
+    private static final String STOCK = "stock";
+    private static final String WAREHOUSE_CODE = "warehouseCode";
+    private static final String COMPANY_CODE = "companyCode";
 
 
-    public static Specification<ProductInventory> findByCriteria(String armazem, String empresa, boolean onlyOutOfSync) {
+    public static Specification<ProductInventory> findByCriteria(String warehouseCode, String companyCode, boolean onlyOutOfSync) {
         return (root, query, cb) -> {
 
             List<Predicate> predicates = new ArrayList<>();
 
-            predicates.add(cb.equal(root.get(ARMAZEM), armazem));
-            predicates.add(cb.equal(root.get(EMPRESA), empresa));
-            
+            predicates.add(cb.equal(root.get(WAREHOUSE_CODE), warehouseCode));
+            predicates.add(cb.equal(root.get(COMPANY_CODE), companyCode));
+
             if (onlyOutOfSync)
-                predicates.add(cb.notEqual(root.get(ESTOQUE_VTEX), root.get(ESTOQUE)));
+                predicates.add(cb.notEqual(root.get(ONLINE_STOCK), root.get(STOCK)));
 
             return cb.and(predicates.toArray(new Predicate[]{}));
         };

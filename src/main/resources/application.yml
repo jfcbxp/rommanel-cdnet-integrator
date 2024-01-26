@@ -60,4 +60,9 @@ cdnet:
   mario-covas:
     identification: ${CDNET_IDENTIFICATION_MARIO_COVAS:16694776000784}
     code: "0107"
-    warehouse: "01"
+    warehouse-code: "01"
+
+togglz:
+  features:
+    PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC:
+      enabled: true

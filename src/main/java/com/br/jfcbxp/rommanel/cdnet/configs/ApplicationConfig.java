@@ -12,5 +12,5 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableSchedulerLock(defaultLockAtMostFor = "${schedulers.default-most-lock-time}")
 @EnableRetry
 public class ApplicationConfig {
-
+    
 }

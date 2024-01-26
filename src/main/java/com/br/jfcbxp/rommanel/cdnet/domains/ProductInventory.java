@@ -13,7 +13,6 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,31 +28,22 @@ public class ProductInventory implements Serializable {
 
     @Id
     @Column(name = "CODIGO_PRODUTO")
-    private String codigo;
-
-    @Column(name = "DESCRICAO_PRODUTO")
-    private String descricao;
+    private String productCode;
 
     @Column(name = "PRECO_PRODUTO")
-    private BigDecimal preco;
+    private BigDecimal price;
 
     @Column(name = "ESTOQUE_PRODUTO")
-    private BigDecimal estoque;
-
-    @Column(name = "DATA_MOVIMENTO")
-    private LocalDate dataMovimento;
+    private BigDecimal stock;
 
     @Column(name = "EMPRESA")
-    private String empresa;
+    private String companyCode;
 
     @Column(name = "ARMAZEM")
-    private String armazem;
-
-    @Column(name = "ESTOQUE_GERAL_ARMAZEM_10")
-    private BigDecimal estoqueGeralArmazem10;
+    private String warehouseCode;
 
     @Column(name = "ESTOQUE_VTEX")
-    private BigDecimal estoqueVtex;
+    private BigDecimal onlineStock;
 
 
 }

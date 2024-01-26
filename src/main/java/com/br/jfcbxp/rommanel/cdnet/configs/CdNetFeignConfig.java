@@ -13,11 +13,9 @@ public class CdNetFeignConfig {
 
     @Bean
     public Decoder feignDecoder() {
-
         ObjectFactory<HttpMessageConverters> messageConverters = HttpMessageConverters::new;
         return new SpringDecoder(messageConverters);
     }
-
 
     @Bean
     public IntegrationErrorDecoder errorDecoder() {

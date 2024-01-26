@@ -14,6 +14,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.togglz.core.Feature;
+import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.util.NamedFeature;
 
 import java.util.List;
 
@@ -26,10 +29,13 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
     private final CdnetAuthService authService;
     private final ProductInventoryRepository repository;
     private final ModelMapper mapper;
+    private final FeatureManager featureManager;
+
+    private static final Feature PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC = new NamedFeature("PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC");
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public void updateInventory(String empresa, String armazem) {
+    public void updateInventory(String companyCode, String warehouseCode) {
         log.info("CdNetInventoryServiceImpl.updateInventory - Start");
 
         var sortBy = Sort.by(Sort.Direction.valueOf(CdnetInternalParams.PAGINATE_SORT_DIRECTION_DEFAULT),
@@ -39,23 +45,18 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
 
         var token = authService.getToken();
 
-        repository.findAll(ProductInventorySpecification.findByCriteria(armazem, empresa, true),
+        repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, companyCode, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
                 page).stream().forEach(productInventory -> {
                     var product = mapper.map(productInventory, CdNetInventoryRequest.class);
                     var response = client.updateInventory(token, product);
-                    if (response.success()) {
-                        repository.updateIntegration(productInventory.getCodigo(), productInventory.getArmazem(),
-                                productInventory.getEmpresa(), productInventory.getEstoque());
+                    if (response.success() || response.statusCode().equals(CdnetInternalParams.PRODUCT_NOT_FOUND_ERROR_CODE)) {
+                        repository.updateIntegration(productInventory.getProductCode(), productInventory.getWarehouseCode(),
+                                productInventory.getCompanyCode(), productInventory.getStock());
                     } else {
                         log.info("CdNetInventoryServiceImpl.updateInventory - unsuccessful integration for product {} - code {} - message: {}, data {}",
                                 product.fullProductId(), response.statusCode(), response.message(), response.data());
-
-                        
                     }
-
-
                 }
-
         );
 
         log.info("CdNetInventoryServiceImpl.updateInventory - End");
@@ -63,12 +64,12 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
     }
 
     @Override
-    public void updateInventoryList(String empresa, String armazem) {
+    public void updateInventoryList(String companyCode, String warehouseCode) {
         log.info("CdNetInventoryServiceImpl.updateInventoryList - Start");
 
         try {
             var token = authService.getToken();
-            var products = this.findOutOfSyncProducts(empresa, armazem);
+            var products = this.findOutOfSyncProducts(companyCode, warehouseCode);
 
             if (!products.isEmpty())
                 client.updateInventoryList(token, products);
@@ -82,7 +83,7 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    private List<CdNetInventoryRequest> findOutOfSyncProducts(String empresa, String armazem) {
+    private List<CdNetInventoryRequest> findOutOfSyncProducts(String companyCode, String warehouseCode) {
         log.info("CdNetInventoryServiceImpl.findOutOfSyncProducts - Start");
 
         var sortBy = Sort.by(Sort.Direction.valueOf(CdnetInternalParams.PAGINATE_SORT_DIRECTION_DEFAULT),
@@ -90,10 +91,10 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
 
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
 
-        return repository.findAll(ProductInventorySpecification.findByCriteria(empresa, armazem, true),
+        return repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, companyCode, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
                 page).stream().map(productInventory -> {
-            repository.updateIntegration(productInventory.getCodigo(), productInventory.getArmazem(),
-                    productInventory.getEmpresa(), productInventory.getEstoque());
+            repository.updateIntegration(productInventory.getProductCode(), productInventory.getWarehouseCode(),
+                    productInventory.getCompanyCode(), productInventory.getStock());
             return mapper.map(productInventory, CdNetInventoryRequest.class);
         }).toList();
 

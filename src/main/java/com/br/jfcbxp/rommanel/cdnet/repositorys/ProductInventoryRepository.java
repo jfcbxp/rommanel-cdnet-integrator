@@ -23,18 +23,18 @@ public interface ProductInventoryRepository extends JpaRepository<ProductInvento
             flushAutomatically = true
     )
     @Query(
-            value = "UPDATE SB2010 SET B2_ESTVTEX = :estoqueVtex where B2_COD = :codigo and B2_LOCAL = :armazem and B2_FILIAL = :empresa",
+            value = "UPDATE SB2010 SET B2_ESTVTEX = :onlineStock where B2_COD = :productCode and B2_LOCAL = :warehouseCode and B2_FILIAL = :companyCode",
             nativeQuery = true
     )
     void updateIntegration(
-            @Param("codigo")
-            String codigo,
-            @Param("armazem")
-            String armazem,
-            @Param("empresa")
-            String empresa,
-            @Param("estoqueVtex")
-            BigDecimal estoqueVtex
+            @Param("productCode")
+            String productCode,
+            @Param("warehouseCode")
+            String warehouseCode,
+            @Param("companyCode")
+            String companyCode,
+            @Param("onlineStock")
+            BigDecimal onlineStock
     );
 
 }

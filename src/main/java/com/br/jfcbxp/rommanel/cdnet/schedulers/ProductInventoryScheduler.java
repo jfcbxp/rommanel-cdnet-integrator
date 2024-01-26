@@ -19,10 +19,10 @@ public class ProductInventoryScheduler {
     private String leastLockTimeString;
 
     @Value("${cdnet.mario-covas.code}")
-    private String empresa;
+    private String companyCode;
 
-    @Value("${cdnet.mario-covas.warehouse}")
-    private String armazem;
+    @Value("${cdnet.mario-covas.warehouse-code}")
+    private String warehouseCode;
 
     @Scheduled(
             cron = "${update-inventory.scheduler.cron-value}",
@@ -37,7 +37,7 @@ public class ProductInventoryScheduler {
         var start = System.currentTimeMillis();
         try {
             log.info("CdnetInventoryService.checkOutOfSyncProducts - Start");
-            service.updateInventory(empresa, armazem);
+            service.updateInventory(companyCode, warehouseCode);
 
         } finally {
             log.info("CdnetInventoryService.checkOutOfSyncProducts - End - took [{}ms]", (System.currentTimeMillis() - start));
