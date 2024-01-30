@@ -14,10 +14,7 @@ import org.springframework.stereotype.Component;
 public class ProductInventoryScheduler {
 
     private final CdnetInventoryService service;
-
-    @Value("${update-inventory.scheduler.least-lock-time}")
-    private String leastLockTimeString;
-
+    
     @Value("${cdnet.mario-covas.code}")
     private String companyCode;
 

@@ -49,6 +49,16 @@ update-inventory:
     most-lock-time: PT1M
     limit-rows: 200
 
+update-sale:
+  max-retires: 10
+  pulse-interval: 5
+  scheduler:
+    cron-value: ${CRON_VALUE:0 */10 7 * * *}
+    least-lock-time: PT30s
+    most-lock-time: PT1M
+    limit-rows: 200
+
+
 cdnet:
   grant-type: ${CDNET_GRANT_TYPE:password}
   client-id: ${CDNET_CLIENT_ID:17-ALMEIDA-ELZA}

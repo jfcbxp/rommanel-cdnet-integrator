@@ -2,6 +2,7 @@ package com.br.jfcbxp.rommanel.cdnet.services.impl;
 
 import com.br.jfcbxp.rommanel.cdnet.clients.CdnetInventoryClient;
 import com.br.jfcbxp.rommanel.cdnet.constants.CdnetInternalParams;
+import com.br.jfcbxp.rommanel.cdnet.domains.ProductInventory;
 import com.br.jfcbxp.rommanel.cdnet.records.requests.CdNetInventoryRequest;
 import com.br.jfcbxp.rommanel.cdnet.repositorys.ProductInventoryRepository;
 import com.br.jfcbxp.rommanel.cdnet.services.CdnetAuthService;
@@ -39,28 +40,30 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
         log.info("CdNetInventoryServiceImpl.updateInventory - Start");
 
         var sortBy = Sort.by(Sort.Direction.valueOf(CdnetInternalParams.PAGINATE_SORT_DIRECTION_DEFAULT),
-                CdnetInternalParams.PAGINATE_SORT_PROPERTIES_DEFAULT);
+                CdnetInternalParams.PAGINATE_SORT_PRODUCT_INVENTORY_PROPERTIES_DEFAULT);
 
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
 
-        var token = authService.getToken();
-
         repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, companyCode, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
-                page).stream().forEach(productInventory -> {
-                    var product = mapper.map(productInventory, CdNetInventoryRequest.class);
-                    var response = client.updateInventory(token, product);
-                    if (response.success() || response.statusCode().equals(CdnetInternalParams.PRODUCT_NOT_FOUND_ERROR_CODE)) {
-                        repository.updateIntegration(productInventory.getProductCode(), productInventory.getWarehouseCode(),
-                                productInventory.getCompanyCode(), productInventory.getStock());
-                    } else {
-                        log.info("CdNetInventoryServiceImpl.updateInventory - unsuccessful integration for product {} - code {} - message: {}, data {}",
-                                product.fullProductId(), response.statusCode(), response.message(), response.data());
-                    }
-                }
-        );
+                page).stream().forEach(this::sendInventory);
 
         log.info("CdNetInventoryServiceImpl.updateInventory - End");
 
+    }
+
+    private void sendInventory(ProductInventory productInventory) {
+        var token = authService.getToken();
+        var product = mapper.map(productInventory, CdNetInventoryRequest.class);
+        var response = client.updateInventory(token, product);
+        if (response.success() || response.statusCode().equals(CdnetInternalParams.PRODUCT_NOT_FOUND_ERROR_CODE)) {
+            repository.updateIntegration(productInventory.getProductCode(), productInventory.getWarehouseCode(),
+                    productInventory.getCompanyCode(), productInventory.getStock());
+            log.error("CdNetInventoryServiceImpl.updateInventory - successful integration for product {} - code {} - message: {}, data {}",
+                    product.fullProductId(), response.statusCode(), response.message(), response.data());
+        } else {
+            log.error("CdNetInventoryServiceImpl.updateInventory - unsuccessful integration for product {} - code {} - message: {}, data {}",
+                    product.fullProductId(), response.statusCode(), response.message(), response.data());
+        }
     }
 
     @Override
@@ -87,7 +90,7 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
         log.info("CdNetInventoryServiceImpl.findOutOfSyncProducts - Start");
 
         var sortBy = Sort.by(Sort.Direction.valueOf(CdnetInternalParams.PAGINATE_SORT_DIRECTION_DEFAULT),
-                CdnetInternalParams.PAGINATE_SORT_PROPERTIES_DEFAULT);
+                CdnetInternalParams.PAGINATE_SORT_PRODUCT_INVENTORY_PROPERTIES_DEFAULT);
 
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
 
