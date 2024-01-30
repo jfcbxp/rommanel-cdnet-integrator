@@ -43,10 +43,12 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
 
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
 
-        repository.findAll(SaleSpecification.findByCriteria(LocalDate.now(), companyCode),
+        var token = authService.getToken();
+
+        repository.findAll(SaleSpecification.findByCriteria(LocalDate.ofYearDay(2024, 1), companyCode),
                 page).stream().forEach(sale -> {
                     if (!sale.getProducts().isEmpty())
-                        this.sendSale(sale);
+                        this.sendSale(sale, token);
                 }
         );
 
@@ -54,10 +56,8 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
 
     }
 
-    private void sendSale(Sale sale) {
+    private void sendSale(Sale sale, String token) {
         var saleRequest = mapper.map(sale, CdNetSaleRequest.class);
-
-        var token = authService.getToken();
 
         var date = ZonedDateTime.now(ZoneId.of(CdnetInternalParams.ZONE_ID));
         var integrationTime = date.getHour() + ":" + date.getMinute();
