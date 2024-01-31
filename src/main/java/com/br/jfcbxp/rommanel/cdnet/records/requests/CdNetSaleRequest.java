@@ -12,6 +12,7 @@ public record CdNetSaleRequest(String companyIdentification,
                                String nfeNumber,
                                String nfekey,
                                List<CdNetSaleProductRequest> saleProducts,
+                               List<CdNetSaleTotalRequest> totals,
                                CdnetSaleTypeEnum saleType
 ) {
 }

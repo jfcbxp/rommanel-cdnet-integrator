@@ -24,7 +24,7 @@ public class ProductInventoryConverter extends AbstractConverter<ProductInventor
         var date = ZonedDateTime.now(ZoneId.of(CdnetInternalParams.ZONE_ID));
         var integrationDate = date.format(DateTimeFormatter.ofPattern(CdnetInternalParams.INTEGRATION_DATE_TIME_FORMAT));
 
-        return new CdNetInventoryRequest(new BigInteger(productInventory.getProductCode().trim()), identification, productInventory.getStock().toBigInteger(), integrationDate);
+        return new CdNetInventoryRequest(new BigInteger(productInventory.getProductCode().trim()), identification, productInventory.getStock().toBigInteger(), integrationDate, 0, true);
 
     }
 }

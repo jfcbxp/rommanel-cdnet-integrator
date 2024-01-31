@@ -5,5 +5,7 @@ import java.math.BigInteger;
 public record CdNetInventoryRequest(BigInteger fullProductId,
                                     String identification,
                                     BigInteger quantity,
-                                    String lastMoveDate) {
+                                    String lastMoveDate,
+                                    Integer cuttingEcommerce,
+                                    boolean ecommerce) {
 }

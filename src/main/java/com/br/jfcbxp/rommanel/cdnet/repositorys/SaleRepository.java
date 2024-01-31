@@ -21,7 +21,7 @@ public interface SaleRepository extends JpaRepository<Sale, Integer> {
             flushAutomatically = true
     )
     @Query(
-            value = "UPDATE SF2010 SET F2_ZDTCDNE = :date, F2_ZHRCDNE = :time where R_E_C_N_O_ = :id",
+            value = "UPDATE SF2010 SET F2_ZDTCDNE = :date, F2_ZHRCDNE = :time, F2_ZIDCDNE = :sendId where R_E_C_N_O_ = :id",
             nativeQuery = true
     )
     void updateIntegration(
@@ -29,6 +29,8 @@ public interface SaleRepository extends JpaRepository<Sale, Integer> {
             String date,
             @Param("time")
             String time,
+            @Param("sendId")
+            String sendId,
             @Param("id")
             Integer id
     );

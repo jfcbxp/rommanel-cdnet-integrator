@@ -4,6 +4,8 @@ import com.br.jfcbxp.rommanel.cdnet.configs.CdNetFeignConfig;
 import com.br.jfcbxp.rommanel.cdnet.records.requests.CdNetSaleRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -28,4 +30,13 @@ public interface CdnetSaleClient {
             String token,
             @RequestBody
             List<CdNetSaleRequest> sales);
+
+    @GetMapping(
+            value = "/return/{sendId}"
+    )
+    String getSaleIntegrationResult(
+            @RequestHeader("Authorization")
+            String token,
+            @PathVariable("sendId")
+            String sendId);
 }

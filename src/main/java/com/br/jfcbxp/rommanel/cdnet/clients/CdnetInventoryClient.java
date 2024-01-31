@@ -15,13 +15,13 @@ import java.util.List;
         name = "cdnet-inventory-client",
         value = "cdnet-inventory-client",
         url = "${cdnet.base-server-url}",
-        path = "/api/v1/Inventory",
+        path = "/api",
         configuration = CdNetFeignConfig.class
 )
 public interface CdnetInventoryClient {
 
     @PutMapping(
-            value = "/UpdateInventoryList",
+            value = "/v2/Inventory/UpdateInventoryList",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -32,7 +32,7 @@ public interface CdnetInventoryClient {
             List<CdNetInventoryRequest> inventoryRequests);
 
     @PutMapping(
-            value = "/UpdateInventory",
+            value = "/v1/Inventory/UpdateInventory",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )

@@ -65,13 +65,13 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
 
         var response = client.sendSale(token, List.of(saleRequest));
         if (Strings.isNotEmpty(response)) {
-            log.info("CdNetSaleServiceImpl.sendSales - successful integration sale {}",
-                    saleRequest);
+            log.info("CdNetSaleServiceImpl.sendSales - successful integration sale {} {}",
+                    response, saleRequest);
             repository.updateIntegration(integrationDate,
-                    integrationTime, sale.getId());
+                    integrationTime, response, sale.getId());
         } else {
-            log.error("CdNetSaleServiceImpl.sendSales - unsuccessful integration sale {}",
-                    sale.getDocumentKey());
+            log.error("CdNetSaleServiceImpl.sendSales - unsuccessful integration sale {} {}",
+                    response, sale.getDocumentKey());
         }
     }
 }
