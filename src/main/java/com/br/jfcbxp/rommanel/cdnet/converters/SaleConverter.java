@@ -7,6 +7,7 @@ import com.br.jfcbxp.rommanel.cdnet.domains.SaleProduct;
 import com.br.jfcbxp.rommanel.cdnet.enums.CdnetSaleTotalTypeEnum;
 import com.br.jfcbxp.rommanel.cdnet.enums.CdnetSaleTransactionEnum;
 import com.br.jfcbxp.rommanel.cdnet.enums.CdnetSaleTypeEnum;
+import com.br.jfcbxp.rommanel.cdnet.records.requests.CdNetSalePaymentRequest;
 import com.br.jfcbxp.rommanel.cdnet.records.requests.CdNetSaleProductRequest;
 import com.br.jfcbxp.rommanel.cdnet.records.requests.CdNetSaleRequest;
 import com.br.jfcbxp.rommanel.cdnet.records.requests.CdNetSaleTotalRequest;
@@ -32,7 +33,8 @@ public class SaleConverter extends AbstractConverter<Sale, CdNetSaleRequest> {
                 .map(totalMapper)
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
 
-
+        var payment = new CdNetSalePaymentRequest(sale.getPaymentDescription(), total.value());
+        
         return new CdNetSaleRequest(identification,
                 sale.getDocument().concat(sale.getDocumentVersion()),
                 sale.getDocumentDate().format(DateTimeFormatter.ofPattern(CdnetInternalParams.INTEGRATION_DATE_TIME_FORMAT)),
@@ -40,6 +42,7 @@ public class SaleConverter extends AbstractConverter<Sale, CdNetSaleRequest> {
                 sale.getDocument(),
                 sale.getDocumentKey(),
                 sale.getProducts().stream().map(product -> new CdNetSaleProductRequest(product.getProductId(), product.getProductQuantity().toBigInteger(), product.getProductTotal())).toList(),
+                List.of(payment),
                 List.of(total),
                 CdnetSaleTypeEnum.WHOLESALE,
                 sale.getCustomerDocument()

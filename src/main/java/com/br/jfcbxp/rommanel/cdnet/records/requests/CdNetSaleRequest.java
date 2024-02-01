@@ -12,6 +12,7 @@ public record CdNetSaleRequest(String companyIdentification,
                                String nfeNumber,
                                String nfekey,
                                List<CdNetSaleProductRequest> saleProducts,
+                               List<CdNetSalePaymentRequest> payments,
                                List<CdNetSaleTotalRequest> totals,
                                CdnetSaleTypeEnum saleType,
                                String document

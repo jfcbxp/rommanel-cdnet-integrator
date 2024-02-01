@@ -5,6 +5,6 @@ import com.br.jfcbxp.rommanel.cdnet.enums.CdnetSaleTotalTypeEnum;
 import java.math.BigDecimal;
 
 public record CdNetSaleTotalRequest(CdnetSaleTotalTypeEnum type,
-                                    BigDecimal totalValue
+                                    BigDecimal value
 ) {
 }

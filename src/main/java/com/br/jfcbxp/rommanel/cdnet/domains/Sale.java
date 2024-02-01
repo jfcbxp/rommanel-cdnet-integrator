@@ -52,6 +52,9 @@ public class Sale implements Serializable {
     @Column(name = "CGC")
     private String customerDocument;
 
+    @Column(name = "DESCRICAO_PAGAMENTO")
+    private String paymentDescription;
+
     @OneToMany(
             fetch = FetchType.EAGER,
             mappedBy = "sale",
