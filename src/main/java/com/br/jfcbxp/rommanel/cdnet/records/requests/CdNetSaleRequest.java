@@ -13,6 +13,7 @@ public record CdNetSaleRequest(String companyIdentification,
                                String nfekey,
                                List<CdNetSaleProductRequest> saleProducts,
                                List<CdNetSaleTotalRequest> totals,
-                               CdnetSaleTypeEnum saleType
+                               CdnetSaleTypeEnum saleType,
+                               String document
 ) {
 }

@@ -76,3 +76,10 @@ togglz:
   features:
     PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC:
       enabled: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 3000

@@ -44,10 +44,15 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
 
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
 
-        var token = authService.getToken();
 
-        repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, companyCode, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
-                page).stream().forEach(productInventory -> sendInventory(productInventory, token));
+        var products = repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, companyCode, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
+                page);
+
+        if (!products.isEmpty()) {
+            var token = authService.getToken();
+            products.stream().forEach(productInventory -> sendInventory(productInventory, token));
+        }
+
 
         log.info("CdNetInventoryServiceImpl.updateInventory - End");
 

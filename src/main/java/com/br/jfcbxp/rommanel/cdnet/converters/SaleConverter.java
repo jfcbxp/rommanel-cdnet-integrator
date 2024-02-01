@@ -39,9 +39,10 @@ public class SaleConverter extends AbstractConverter<Sale, CdNetSaleRequest> {
                 CdnetSaleTransactionEnum.SALE,
                 sale.getDocument(),
                 sale.getDocumentKey(),
-                sale.getProducts().stream().map(product -> new CdNetSaleProductRequest(product.getProductId(), product.getProductQuantity().toBigInteger())).toList(),
+                sale.getProducts().stream().map(product -> new CdNetSaleProductRequest(product.getProductId(), product.getProductQuantity().toBigInteger(), product.getProductTotal())).toList(),
                 List.of(total),
-                CdnetSaleTypeEnum.WHOLESALE
+                CdnetSaleTypeEnum.WHOLESALE,
+                sale.getCustomerDocument()
 
         );
 

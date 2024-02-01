@@ -43,14 +43,18 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
 
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
 
-        var token = authService.getToken();
 
-        repository.findAll(SaleSpecification.findByCriteria(LocalDate.ofYearDay(2024, 1), companyCode),
-                page).stream().forEach(sale -> {
-                    if (!sale.getProducts().isEmpty())
-                        this.sendSale(sale, token);
-                }
-        );
+        var sales = repository.findAll(SaleSpecification.findByCriteria(LocalDate.ofYearDay(2024, 1), companyCode),
+                page);
+
+        if (!sales.isEmpty()) {
+            var token = authService.getToken();
+            sales.stream().forEach(sale -> {
+                        if (!sale.getProducts().isEmpty())
+                            this.sendSale(sale, token);
+                    }
+            );
+        }
 
         log.info("CdNetSaleServiceImpl.sendSales - End");
 

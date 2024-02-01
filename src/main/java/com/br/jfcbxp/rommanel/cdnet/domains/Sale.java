@@ -49,6 +49,9 @@ public class Sale implements Serializable {
     @Column(name = "DATA_EMISSAO")
     private LocalDateTime documentDate;
 
+    @Column(name = "CGC")
+    private String customerDocument;
+
     @OneToMany(
             fetch = FetchType.EAGER,
             mappedBy = "sale",
