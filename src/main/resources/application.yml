@@ -53,7 +53,7 @@ update-sale:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${CRON_VALUE:0 */20 5-6 * * *}
+    cron-value: ${CRON_VALUE:0 */10 1-7 * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
@@ -67,8 +67,8 @@ cdnet:
   client-secret: ${CDNET_CLIENT_SECRET:b3e82ac0-64d2-4a57-9879-a1441c0b6b36}
   authentication-server-url: ${CDNET_AUTH_URL:https://login.rommanel.com.br}
   base-server-url: ${CDNET_BASE_URL:https://distribuidor.cdnetweb.com.br}
-  mario-covas:
-    identification: ${CDNET_IDENTIFICATION_MARIO_COVAS:16694776000784}
+  inventory:
+    identification: ${CDNET_IDENTIFICATION_INVENTORY:16694776000784}
     code: "0107"
     warehouse-code: "01"
 

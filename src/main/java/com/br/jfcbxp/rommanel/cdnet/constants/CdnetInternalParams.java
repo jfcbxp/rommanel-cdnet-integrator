@@ -2,7 +2,7 @@ package com.br.jfcbxp.rommanel.cdnet.constants;
 
 public final class CdnetInternalParams {
 
-    public static final int PAGINATE_ROWS_DEFAULT = 250;
+    public static final int PAGINATE_ROWS_DEFAULT = 500;
     public static final int PAGINATE_PAGE_DEFAULT = 0;
     public static final String PAGINATE_SORT_DIRECTION_DEFAULT = "DESC";
     public static final String PAGINATE_SORT_PRODUCT_INVENTORY_PROPERTIES_DEFAULT = "productCode";

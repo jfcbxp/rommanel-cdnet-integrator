@@ -12,7 +12,6 @@ import com.br.jfcbxp.rommanel.cdnet.records.requests.CdNetSaleProductRequest;
 import com.br.jfcbxp.rommanel.cdnet.records.requests.CdNetSaleRequest;
 import com.br.jfcbxp.rommanel.cdnet.records.requests.CdNetSaleTotalRequest;
 import org.modelmapper.AbstractConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -22,8 +21,6 @@ import java.util.function.Function;
 
 @Component
 public class SaleConverter extends AbstractConverter<Sale, CdNetSaleRequest> {
-    @Value("${cdnet.mario-covas.identification}")
-    private String identification;
 
     @Override
     protected CdNetSaleRequest convert(Sale sale) {
@@ -34,8 +31,8 @@ public class SaleConverter extends AbstractConverter<Sale, CdNetSaleRequest> {
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
 
         var payment = new CdNetSalePaymentRequest(sale.getPaymentDescription(), total.value());
-        
-        return new CdNetSaleRequest(identification,
+
+        return new CdNetSaleRequest(sale.getCompanyIdentification(),
                 sale.getDocument().concat(sale.getDocumentVersion()),
                 sale.getDocumentDate().format(DateTimeFormatter.ofPattern(CdnetInternalParams.INTEGRATION_DATE_TIME_FORMAT)),
                 CdnetSaleTransactionEnum.SALE,

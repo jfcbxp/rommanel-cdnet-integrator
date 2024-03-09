@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 
 @Component
 public class ProductInventoryConverter extends AbstractConverter<ProductInventory, CdNetInventoryRequest> {
-    @Value("${cdnet.mario-covas.identification}")
+    @Value("${cdnet.inventory.identification}")
     private String identification;
 
     @Override

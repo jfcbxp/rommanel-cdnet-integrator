@@ -35,7 +35,7 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public void sendSales(String companyCode) {
+    public void sendSales() {
         log.info("CdNetSaleServiceImpl.sendSales - Start");
 
         var sortBy = Sort.by(Sort.Direction.valueOf(CdnetInternalParams.PAGINATE_SORT_DIRECTION_DEFAULT),
@@ -43,8 +43,7 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
 
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
 
-
-        var sales = repository.findAll(SaleSpecification.findByCriteria(LocalDate.ofYearDay(2024, 1), companyCode),
+        var sales = repository.findAll(SaleSpecification.findByCriteria(LocalDate.ofYearDay(2024, 1)),
                 page);
 
         if (!sales.isEmpty()) {

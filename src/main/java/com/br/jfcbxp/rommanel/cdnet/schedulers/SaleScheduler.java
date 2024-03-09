@@ -4,7 +4,6 @@ import com.br.jfcbxp.rommanel.cdnet.services.CdnetSaleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +13,6 @@ import org.springframework.stereotype.Component;
 public class SaleScheduler {
 
     private final CdnetSaleService service;
-
-    @Value("${cdnet.mario-covas.code}")
-    private String companyCode;
 
     @Scheduled(
             cron = "${update-sale.scheduler.cron-value}",
@@ -31,7 +27,7 @@ public class SaleScheduler {
         var start = System.currentTimeMillis();
         try {
             log.info("CdnetSaleService.checkSales - Start");
-            service.sendSales(companyCode);
+            service.sendSales();
 
         } finally {
             log.info("CdnetSaleService.checkSales - End - took [{}ms]", (System.currentTimeMillis() - start));

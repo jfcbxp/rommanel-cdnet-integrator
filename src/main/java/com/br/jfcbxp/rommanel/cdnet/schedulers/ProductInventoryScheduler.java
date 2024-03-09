@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 public class ProductInventoryScheduler {
 
     private final CdnetInventoryService service;
-    
-    @Value("${cdnet.mario-covas.code}")
+
+    @Value("${cdnet.inventory.code}")
     private String companyCode;
 
-    @Value("${cdnet.mario-covas.warehouse-code}")
+    @Value("${cdnet.inventory.warehouse-code}")
     private String warehouseCode;
 
     @Scheduled(
