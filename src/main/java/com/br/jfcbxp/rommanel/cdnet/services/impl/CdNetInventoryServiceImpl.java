@@ -64,7 +64,7 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
         if (response.success() || response.statusCode().equals(CdnetInternalParams.PRODUCT_NOT_FOUND_ERROR_CODE)) {
             repository.updateIntegration(productInventory.getProductCode(), productInventory.getWarehouseCode(),
                     productInventory.getCompanyCode(), productInventory.getStock());
-            log.error("CdNetInventoryServiceImpl.updateInventory - successful integration for product {} - code {} - message: {}, data {}",
+            log.info("CdNetInventoryServiceImpl.updateInventory - successful integration for product {} - code {} - message: {}, data {}",
                     product.fullProductId(), response.statusCode(), response.message(), response.data());
         } else {
             log.error("CdNetInventoryServiceImpl.updateInventory - unsuccessful integration for product {} - code {} - message: {}, data {}",

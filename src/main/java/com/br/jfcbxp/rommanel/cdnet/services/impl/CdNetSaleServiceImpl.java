@@ -69,7 +69,7 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
         var response = client.sendSale(token, List.of(saleRequest));
         if (Strings.isNotEmpty(response)) {
             log.info("CdNetSaleServiceImpl.sendSales - successful integration sale {} {}",
-                    response, saleRequest);
+                    response, sale.getDocumentKey());
             repository.updateIntegration(integrationDate,
                     integrationTime, response, sale.getId());
         } else {
