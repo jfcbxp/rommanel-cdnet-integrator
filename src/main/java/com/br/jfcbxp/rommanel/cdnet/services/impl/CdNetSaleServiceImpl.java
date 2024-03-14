@@ -28,6 +28,7 @@ import java.util.List;
 @Slf4j
 public class CdNetSaleServiceImpl implements CdnetSaleService {
 
+    private static final String NO_VALID_PRODUCTS = "NO_VALID_PRODUCTS";
     private final CdnetSaleClient client;
     private final CdnetAuthService authService;
     private final SaleRepository repository;
@@ -48,10 +49,8 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
 
         if (!sales.isEmpty()) {
             var token = authService.getToken();
-            sales.stream().forEach(sale -> {
-                        if (!sale.getProducts().isEmpty())
-                            this.sendSale(sale, token);
-                    }
+            sales.stream().forEach(sale ->
+                    this.sendSale(sale, token)
             );
         }
 
@@ -60,13 +59,19 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
     }
 
     private void sendSale(Sale sale, String token) {
-        var saleRequest = mapper.map(sale, CdNetSaleRequest.class);
-
         var date = ZonedDateTime.now(ZoneId.of(CdnetInternalParams.ZONE_ID));
         var integrationTime = date.getHour() + ":" + date.getMinute();
         var integrationDate = date.format(DateTimeFormatter.ofPattern(CdnetInternalParams.INTEGRATION_DATE_FORMAT));
 
+        if (!sale.getProducts().isEmpty()) {
+            repository.updateIntegration(integrationDate,
+                    integrationTime, NO_VALID_PRODUCTS, sale.getId());
+            return;
+        }
+        
+        var saleRequest = mapper.map(sale, CdNetSaleRequest.class);
         var response = client.sendSale(token, List.of(saleRequest));
+
         if (Strings.isNotEmpty(response)) {
             log.info("CdNetSaleServiceImpl.sendSales - successful integration sale {} {}",
                     response, sale.getDocumentKey());
