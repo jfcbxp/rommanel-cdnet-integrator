@@ -29,6 +29,8 @@ import java.util.List;
 public class CdNetSaleServiceImpl implements CdnetSaleService {
 
     private static final String NO_VALID_PRODUCTS = "NO_VALID_PRODUCTS";
+    private static final int DEFAULT_YEAR = 2023;
+    private static final int DEFAULT_DAY_OF_YEAR = 1;
     private final CdnetSaleClient client;
     private final CdnetAuthService authService;
     private final SaleRepository repository;
@@ -44,7 +46,7 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
 
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
 
-        var sales = repository.findAll(SaleSpecification.findByCriteria(LocalDate.ofYearDay(2024, 1)),
+        var sales = repository.findAll(SaleSpecification.findByCriteria(LocalDate.ofYearDay(DEFAULT_YEAR, DEFAULT_DAY_OF_YEAR)),
                 page);
 
         if (!sales.isEmpty()) {
@@ -66,9 +68,13 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
         if (!sale.getProducts().isEmpty()) {
             repository.updateIntegration(integrationDate,
                     integrationTime, NO_VALID_PRODUCTS, sale.getId());
+
+            log.info("CdNetSaleServiceImpl.sendSales - unsuccessful integration sale {} {}",
+                    NO_VALID_PRODUCTS, sale.getDocumentKey());
+
             return;
         }
-        
+
         var saleRequest = mapper.map(sale, CdNetSaleRequest.class);
         var response = client.sendSale(token, List.of(saleRequest));
 
