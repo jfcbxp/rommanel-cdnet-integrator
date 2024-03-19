@@ -65,7 +65,7 @@ public class CdNetSaleServiceImpl implements CdnetSaleService {
         var integrationTime = date.getHour() + ":" + date.getMinute();
         var integrationDate = date.format(DateTimeFormatter.ofPattern(CdnetInternalParams.INTEGRATION_DATE_FORMAT));
 
-        if (!sale.getProducts().isEmpty()) {
+        if (sale.getProducts().isEmpty()) {
             repository.updateIntegration(integrationDate,
                     integrationTime, NO_VALID_PRODUCTS, sale.getId());
 
