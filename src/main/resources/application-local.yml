@@ -1,0 +1,49 @@
+spring:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: sa
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    out-of-order: false
+    ignore-missing-migrations: true
+    baseline-version: 0
+    table: flyway_schema_history_cdnet_integrator
+
+schedulers:
+  default-most-lock-time: PT1M
+
+update-product:
+  max-retires: 10
+  pulse-interval: 5
+  scheduler:
+    cron-value: ${CRON_VALUE:0 0/1 * * * *}
+    least-lock-time: PT30s
+    most-lock-time: PT1M
+    limit-rows: 200
+
+update-inventory:
+  max-retires: 10
+  pulse-interval: 5
+  scheduler:
+    cron-value: ${CRON_VALUE:0 0/10 1-8 * * *}
+    least-lock-time: PT30s
+    most-lock-time: PT1M
+    limit-rows: 200
+
+update-sale:
+  max-retires: 10
+  pulse-interval: 5
+  scheduler:
+    cron-value: ${CRON_VALUE:0 */10 1-8 * * *}
+    least-lock-time: PT30s
+    most-lock-time: PT1M
+    limit-rows: 200

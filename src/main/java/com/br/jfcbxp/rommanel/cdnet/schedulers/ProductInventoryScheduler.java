@@ -33,11 +33,11 @@ public class ProductInventoryScheduler {
     public void checkOutOfSyncProducts() {
         var start = System.currentTimeMillis();
         try {
-            log.info("CdnetInventoryService.checkOutOfSyncProducts - Start");
+            log.info("ProductInventoryScheduler.checkOutOfSyncProducts - Start");
             service.updateInventory(companyCode, warehouseCode);
 
         } finally {
-            log.info("CdnetInventoryService.checkOutOfSyncProducts - End - took [{}ms]", (System.currentTimeMillis() - start));
+            log.info("ProductInventoryScheduler.checkOutOfSyncProducts - End - took [{}ms]", (System.currentTimeMillis() - start));
         }
     }
 }

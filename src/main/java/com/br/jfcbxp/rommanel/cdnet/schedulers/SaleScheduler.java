@@ -26,11 +26,11 @@ public class SaleScheduler {
     public void checkSales() {
         var start = System.currentTimeMillis();
         try {
-            log.info("CdnetSaleService.checkSales - Start");
+            log.info("SaleScheduler.checkSales - Start");
             service.sendSales();
 
         } finally {
-            log.info("CdnetSaleService.checkSales - End - took [{}ms]", (System.currentTimeMillis() - start));
+            log.info("SaleScheduler.checkSales - End - took [{}ms]", (System.currentTimeMillis() - start));
         }
     }
 }

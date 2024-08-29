@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.2</version>
+        <version>3.3.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.br.jfcbxp.rommanel</groupId>
@@ -15,9 +15,10 @@
     <description>cdnet Integrator</description>
     <properties>
         <java.version>17</java.version>
-        <spring-cloud.version>2023.0.0</spring-cloud.version>
+        <spring-cloud.version>2023.0.3</spring-cloud.version>
         <model-mapper.version>3.2.0</model-mapper.version>
         <logstash-logback-encoder.version>7.4</logstash-logback-encoder.version>
+        <shedlock.version>5.15.1</shedlock.version>
     </properties>
     <dependencies>
         <dependency>
@@ -55,12 +56,12 @@
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-spring</artifactId>
-            <version>5.10.2</version>
+            <version>${shedlock.version}</version>
         </dependency>
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
             <artifactId>shedlock-provider-jdbc-template</artifactId>
-            <version>5.10.2</version>
+            <version>${shedlock.version}</version>
         </dependency>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
@@ -91,6 +92,10 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <version>${logstash-logback-encoder.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>

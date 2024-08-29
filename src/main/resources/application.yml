@@ -40,6 +40,15 @@ management:
 schedulers:
   default-most-lock-time: PT30M
 
+update-product:
+  max-retires: 10
+  pulse-interval: 5
+  scheduler:
+    cron-value: ${CRON_VALUE:0 */10 1-8 * * *}
+    least-lock-time: PT30s
+    most-lock-time: PT1M
+    limit-rows: 200
+
 update-inventory:
   max-retires: 10
   pulse-interval: 5
@@ -67,6 +76,7 @@ cdnet:
   client-secret: ${CDNET_CLIENT_SECRET:b3e82ac0-64d2-4a57-9879-a1441c0b6b36}
   authentication-server-url: ${CDNET_AUTH_URL:https://login.rommanel.com.br}
   base-server-url: ${CDNET_BASE_URL:https://distribuidor.cdnetweb.com.br}
+  base-product-url: ${CDNET_BASE_PRODUCT_URL:https://produto.cdnetweb.com.br}
   inventory:
     identification: ${CDNET_IDENTIFICATION_INVENTORY:16694776000784}
     code: "0107"
