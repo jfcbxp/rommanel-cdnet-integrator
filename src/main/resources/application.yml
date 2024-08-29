@@ -77,6 +77,7 @@ cdnet:
   authentication-server-url: ${CDNET_AUTH_URL:https://login.rommanel.com.br}
   base-server-url: ${CDNET_BASE_URL:https://distribuidor.cdnetweb.com.br}
   base-product-url: ${CDNET_BASE_PRODUCT_URL:https://produto.cdnetweb.com.br}
+  base-protheus-url: ${CDNET_BASE_URL:http://192.168.0.5:9095}
   inventory:
     identification: ${CDNET_IDENTIFICATION_INVENTORY:16694776000784}
     code: "0107"
