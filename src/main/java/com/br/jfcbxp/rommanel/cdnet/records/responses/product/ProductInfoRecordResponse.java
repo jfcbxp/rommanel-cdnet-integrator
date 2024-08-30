@@ -1,8 +1,10 @@
 package com.br.jfcbxp.rommanel.cdnet.records.responses.product;
 
-public record ProductRecordResponse(
+import java.util.List;
+
+public record ProductInfoRecordResponse(
         boolean success,
-        ProductRecordDataResponse data
+        List<Object> data
 ) {
 
 
