@@ -317,7 +317,24 @@ AY0 5 FORMATO
 						dbSelectArea("SBM")
 						SBM->(DbSetOrder(3))
 						if SBM->(DbSeek(xFilial("SBM")+_cCod))
+
 							SB1->B1_GRUPO  := SBM->BM_GRUPO
+
+							IF ALLTRIM(SB1->B1_POSIPI) == "71131100"
+								Do Case
+								Case SBM->BM_GRUPO == "4016"
+									SB1->B1_GRUPO  := "1201"
+								Case SBM->BM_GRUPO == "4017"
+									SB1->B1_GRUPO  := "1202"
+								Case SBM->BM_GRUPO == "4018"
+									SB1->B1_GRUPO  := "1203"
+								Case SBM->BM_GRUPO == "4019"
+									SB1->B1_GRUPO  := "1204"
+								Case SBM->BM_GRUPO == "4020"
+									SB1->B1_GRUPO  := "1205"
+								EndCase
+							ENDIF
+
 						Endif
 
 						_cCod := PadR(oJson['data']['codigoCampanha'],TamSX3("AY2_CDNET")[1])
