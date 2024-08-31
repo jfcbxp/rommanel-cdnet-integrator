@@ -5,6 +5,17 @@ spring:
   application:
     name: cdnet-integrator
 
+  cloud:
+    config:
+      request-read-timeout: 10000
+      request-connect-timeout: 5000
+      retry:
+        max-attempts: 5
+
+  main:
+    lazy-initialization: false
+    allow-bean-definition-overriding: true
+
   datasource:
     url: jdbc:sqlserver://${MSSQLDB_HOST:192.168.0.61}:${MSSQLDB_PORT:1433};databaseName=${MSSQLDB_DBNAME:PROTHEUS};trustServerCertificate=false;encrypt=false;
     username: ${MSSQLDB_USERNAME:sa}
@@ -44,7 +55,7 @@ update-product:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${CRON_VALUE:0 */60 6-8 * * *}
+    cron-value: ${CRON_VALUE:0 */30 11-12 * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
@@ -89,9 +100,15 @@ togglz:
     PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC:
       enabled: true
 
+config:
+  client:
+    maxAttempts: 3
+    backOffDelay: 3000
+
 feign:
   client:
     config:
       default:
-        connectTimeout: 3000
-        readTimeout: 3000
+        readTimeout: 20000
+        connectTimeout: 20000
+        loggerLevel: BASIC
