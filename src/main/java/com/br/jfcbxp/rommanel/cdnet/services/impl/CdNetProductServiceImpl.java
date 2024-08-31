@@ -47,6 +47,8 @@ public class CdNetProductServiceImpl implements CdnetProductService {
             var response = client.getProductsInfo(token, productInfo.getType(), syncDate).data();
 
             for (Object info : response) {
+                log.info("CdNetProductServiceImpl.syncProduct - sendProductInfo {} {} ", productInfo.getEndpoint(), info);
+
                 protheusClient.sendProductInfo(new ProtheusRequest(productInfo.getEndpoint(), info));
             }
 
@@ -68,6 +70,7 @@ public class CdNetProductServiceImpl implements CdnetProductService {
             var pageResponse = page > 1 ? client.getProducts(token, PAGINATE_ROWS_DEFAULT, page, syncDate).data() : response;
 
             for (Object product : pageResponse.produtos()) {
+                log.info("CdNetProductServiceImpl.syncProduct - sendProduct ");
                 protheusClient.sendProductInfo(new ProtheusRequest("/incluirProduto", product));
             }
         }

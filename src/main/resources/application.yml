@@ -44,7 +44,7 @@ update-product:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${CRON_VALUE:0 */60 1-6 * * *}
+    cron-value: ${CRON_VALUE:0 */60 6-8 * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
@@ -62,7 +62,7 @@ update-sale:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${CRON_VALUE:0 */10 1-8 * * *}
+    cron-value: ${CRON_VALUE:0 */10 1-5 * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
@@ -78,6 +78,7 @@ cdnet:
   base-server-url: ${CDNET_BASE_URL:https://distribuidor.cdnetweb.com.br}
   base-product-url: ${CDNET_BASE_PRODUCT_URL:https://produto.cdnetweb.com.br}
   base-protheus-url: ${CDNET_BASE_URL:http://192.168.0.5:9095}
+  loggerLevel: BASIC
   inventory:
     identification: ${CDNET_IDENTIFICATION_INVENTORY:16694776000784}
     code: "0107"
