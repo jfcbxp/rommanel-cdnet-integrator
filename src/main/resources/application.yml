@@ -44,7 +44,7 @@ update-product:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${CRON_VALUE:0 */10 1-8 * * *}
+    cron-value: ${CRON_VALUE:0 */60 1-6 * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
