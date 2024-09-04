@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.togglz.core.Feature;
+import org.togglz.core.manager.FeatureManager;
+import org.togglz.core.util.NamedFeature;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -27,12 +30,15 @@ import static com.br.jfcbxp.rommanel.cdnet.constants.CdnetInternalParams.PAGINAT
 @Slf4j
 public class CdNetProductServiceImpl implements CdnetProductService {
 
+    private static final Feature PRODUCT_FULL_SYNC = new NamedFeature("PRODUCT_FULL_SYNC");
     private static final String DEFAULT_PHOTO_FORMAT = ".jpg";
     private static final String DEFAULT_PRODUCT_PROTHEUS_ENDPOINT = "/incluirProduto";
+
     private final CdnetProductClient client;
     private final CdnetProductPhotoClient photoClient;
     private final ProtheusProductClient protheusClient;
     private final CdnetAuthService authService;
+    private final FeatureManager featureManager;
 
     @Override
     public void syncProducts() {
@@ -119,8 +125,8 @@ public class CdNetProductServiceImpl implements CdnetProductService {
         var localDate = LocalDate.now();
 
         DayOfWeek day = DayOfWeek.of(localDate.get(ChronoField.DAY_OF_WEEK));
-        return day == DayOfWeek.SUNDAY || day == DayOfWeek.SATURDAY ?
-                localDate.minusDays(30) : localDate.minusDays(1);
+        return day == DayOfWeek.SUNDAY || featureManager.isActive(PRODUCT_FULL_SYNC) ?
+                localDate.minusDays(60) : localDate.minusDays(7);
     }
 
 }

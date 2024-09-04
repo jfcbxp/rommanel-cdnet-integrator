@@ -97,10 +97,16 @@ cdnet:
     warehouse-code: "01"
 
 togglz:
+  console:
+    enabled: true
+    secured: false
+    path: /togglz-console
+    use-management-port: false
   features:
     PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC:
       enabled: true
-
+    PRODUCT_FULL_SYNC:
+      enabled: false
 config:
   client:
     maxAttempts: 3
