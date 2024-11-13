@@ -21,7 +21,7 @@ public class ProtheusProductClientConfig {
 
     @Bean
     public Request.Options options() {
-        return new Request.Options(6000, TimeUnit.MILLISECONDS, 6000, TimeUnit.MILLISECONDS, true);
+        return new Request.Options(30000, TimeUnit.MILLISECONDS, 30000, TimeUnit.MILLISECONDS, true);
     }
 
     @Bean

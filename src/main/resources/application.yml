@@ -7,8 +7,8 @@ spring:
 
   cloud:
     config:
-      request-read-timeout: 10000
-      request-connect-timeout: 5000
+      request-read-timeout: 30000
+      request-connect-timeout: 30000
       retry:
         max-attempts: 5
 
@@ -116,6 +116,6 @@ feign:
   client:
     config:
       default:
-        readTimeout: 20000
-        connectTimeout: 20000
+        readTimeout: 30000
+        connectTimeout: 30000
         loggerLevel: BASIC

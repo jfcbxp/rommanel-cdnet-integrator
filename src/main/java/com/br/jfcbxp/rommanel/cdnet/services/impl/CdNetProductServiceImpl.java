@@ -88,7 +88,12 @@ public class CdNetProductServiceImpl implements CdnetProductService {
                 var photoEncoded = getProductPhotoBase64(product.codigoProduto());
                 var productRequest = new CdnetProductRecordRequest(product, photoEncoded);
 
-                protheusClient.sendProductInfo(new ProtheusRequest(DEFAULT_PRODUCT_PROTHEUS_ENDPOINT, productRequest));
+                try {
+                    protheusClient.sendProductInfo(new ProtheusRequest(DEFAULT_PRODUCT_PROTHEUS_ENDPOINT, productRequest));
+                } catch (Exception e) {
+                    log.error("CdNetProductServiceImpl.syncProduct - sendProduct error ", e);
+
+                }
 
             }
         }
