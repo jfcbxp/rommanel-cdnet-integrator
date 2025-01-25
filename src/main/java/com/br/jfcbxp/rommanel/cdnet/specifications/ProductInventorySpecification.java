@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ProductInventorySpecification {
@@ -25,7 +26,9 @@ public class ProductInventorySpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             predicates.add(cb.equal(root.get(WAREHOUSE_CODE), warehouseCode));
-            predicates.add(cb.equal(root.get(COMPANY_CODE), companyCode));
+            
+            if (Objects.nonNull(companyCode))
+                predicates.add(cb.equal(root.get(COMPANY_CODE), companyCode));
 
             if (onlyOutOfSync)
                 predicates.add(cb.notEqual(root.get(ONLINE_STOCK), root.get(STOCK)));

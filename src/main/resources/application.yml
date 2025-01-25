@@ -92,9 +92,8 @@ cdnet:
   base-protheus-url: ${CDNET_BASE_PROTHEUS_URL:http://192.168.0.5:9095}
   loggerLevel: BASIC
   inventory:
-    identification: ${CDNET_IDENTIFICATION_INVENTORY:16694776000784}
-    code: "0107"
-    warehouse-code: "01"
+    ecommerce-company-code: "0107"
+    ecommerce-warehouse-code: "01"
 
 togglz:
   console:

@@ -45,5 +45,8 @@ public class ProductInventory implements Serializable {
     @Column(name = "ESTOQUE_VTEX")
     private BigDecimal onlineStock;
 
+    @Column(name = "CGC_FILIAL")
+    private String companyId;
+
 
 }

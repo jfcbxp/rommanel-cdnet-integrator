@@ -15,10 +15,7 @@ public class ProductInventoryScheduler {
 
     private final CdnetInventoryService service;
 
-    @Value("${cdnet.inventory.code}")
-    private String companyCode;
-
-    @Value("${cdnet.inventory.warehouse-code}")
+    @Value("${cdnet.inventory.ecommerce-warehouse-code}")
     private String warehouseCode;
 
     @Scheduled(
@@ -34,7 +31,7 @@ public class ProductInventoryScheduler {
         var start = System.currentTimeMillis();
         try {
             log.info("ProductInventoryScheduler.checkOutOfSyncProducts - Start");
-            service.updateInventory(companyCode, warehouseCode);
+            service.updateInventory(warehouseCode);
 
         } finally {
             log.info("ProductInventoryScheduler.checkOutOfSyncProducts - End - took [{}ms]", (System.currentTimeMillis() - start));

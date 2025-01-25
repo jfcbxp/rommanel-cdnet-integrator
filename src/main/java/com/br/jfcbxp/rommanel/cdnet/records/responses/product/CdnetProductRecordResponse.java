@@ -18,6 +18,7 @@ public record CdnetProductRecordResponse(
         String codigoEstilo,
         String codigoFormato,
         String ncm,
+        boolean inativo,
         List<CdnetSubProductRecordResponse> subProdutos
 ) {
 

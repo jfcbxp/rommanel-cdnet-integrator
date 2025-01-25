@@ -283,6 +283,8 @@ AY0 5 FORMATO
 						SB1->B1_PRN944I:= "S"
 						SB1->B1_01CODMA:= ""
 						SB1->B1_ATUAPRC:= "S"
+						SB1->B1_ZINATCDN := IIF(PadR(oJson['data']['inativo'],"S","N")
+
 						SB1->(MsUnLock())
 					ELSE
 						CONOUT("ATUALIZANDO PRODUTO "+_cCodProd)
@@ -344,6 +346,9 @@ AY0 5 FORMATO
 							SB1->B1_01CODMA:= AY2->AY2_CODIGO
 
 						endif
+
+
+                        SB1->B1_ZINATCDN := IIF(PadR(oJson['data']['inativo'],"S","N")
 
 						SB1->(MsUnLock())
 
