@@ -11,5 +11,5 @@ public final class CdnetInternalParams {
     public static final String INTEGRATION_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String INTEGRATION_DATE_FORMAT = "yyyyMMdd";
     public static final int PRODUCT_NOT_FOUND_ERROR_CODE = 400;
-    public static final int PAGINATE_INVENTORY_ROWS_DEFAULT = 10000;
+    public static final int PAGINATE_INVENTORY_ROWS_DEFAULT = 1000;
 }

@@ -74,6 +74,7 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public void updateInventoryList(String warehouseCode) {
         log.info("CdNetInventoryServiceImpl.updateInventoryList - Start");
 
@@ -95,7 +96,6 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
         log.info("CdNetInventoryServiceImpl.updateInventoryList - End");
     }
 
-    @Transactional(rollbackOn = Exception.class)
     private List<CdNetInventoryRequest> findOutOfSyncProducts(String warehouseCode) {
         log.info("CdNetInventoryServiceImpl.findOutOfSyncProducts - Start");
 
@@ -104,12 +104,17 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
 
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_INVENTORY_ROWS_DEFAULT, sortBy);
 
-        return repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, null, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
-                page).stream().map(productInventory -> {
+        var products = repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, null, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
+                page);
+
+        return products.stream().map(productInventory -> {
 
             repository.updateIntegration(productInventory.getProductCode(), productInventory.getWarehouseCode(),
                     productInventory.getCompanyCode(), productInventory.getStock());
-            
+
+            log.info("CdNetInventoryServiceImpl.updateInventory - successful integration for product {} - warehouse {} - company: {}, stock {}",
+                    productInventory.getProductCode(), productInventory.getWarehouseCode(), productInventory.getCompanyCode(), productInventory.getStock());
+
             return mapper.map(productInventory, CdNetInventoryRequest.class);
         }).toList();
 
