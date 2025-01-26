@@ -27,6 +27,9 @@ public class ProductInventory implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(name = "REC")
+    private Integer id;
+
     @Column(name = "CODIGO_PRODUTO")
     private String productCode;
 
