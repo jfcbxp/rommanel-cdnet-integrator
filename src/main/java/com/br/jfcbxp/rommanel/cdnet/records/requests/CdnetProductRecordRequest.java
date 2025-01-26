@@ -21,6 +21,7 @@ public record CdnetProductRecordRequest(
         String codigoEstilo,
         String codigoFormato,
         String ncm,
+        boolean inativo,
         List<CdnetSubProductRecordResponse> subProdutos,
         String imagemBase64
 ) {
@@ -40,6 +41,7 @@ public record CdnetProductRecordRequest(
                 product.codigoEstilo(),
                 product.codigoFormato(),
                 product.ncm(),
+                product.inativo(),
                 product.subProdutos(),
                 photoEncoded);
     }

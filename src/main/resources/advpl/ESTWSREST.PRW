@@ -6,16 +6,16 @@
 User Function ESTWSREST()	
 Return
 
-WSRESTFUL ESTCDNET DESCRIPTION "ServiÃ§o REST para estoque"
+WSRESTFUL ESTCDNET DESCRIPTION "ServiÃƒÆ’Ã‚Â§o REST para estoque"
 WSDATA METODO As String //String que vamos receber via URL
- 
-WSMETHOD POST DESCRIPTION "Em caso de sucesso, retorna o mesmo objeto enviado" WSSYNTAX "/ESTCDNET || /ESTCDNET/{METODO}" //Disponibilizamos um mÃ©todo do tipo GET
- 
+
+WSMETHOD POST DESCRIPTION "Em caso de sucesso, retorna o mesmo objeto enviado" WSSYNTAX "/ESTCDNET || /ESTCDNET/{METODO}" //Disponibilizamos um mÃƒÆ’Ã‚Â©todo do tipo GET
+
 END WSRESTFUL
 
 WSMETHOD POST WSRECEIVE METODO WSSERVICE ESTCDNET
 	//--> Recuperamos o produto informado via URL
-	//--> Podemos fazer dessa forma ou utilizando o atributo ::aUrlParms, que Ã© um array com os parÃ¢metros recebidos via URL (QueryString)
+	//--> Podemos fazer dessa forma ou utilizando o atributo ::aUrlParms, que ÃƒÆ’Ã‚Â© um array com os parÃƒÆ’Ã‚Â¢metros recebidos via URL (QueryString)
 	Local cBody := ::GetContent()
 	Local aArea		:= GetArea()
 	Local aItens
@@ -35,7 +35,7 @@ AY0 5 FORMATO
  CAMPANHA AY2
 */
 
-	// define o tipo de retorno do mÃ©todo
+	// define o tipo de retorno do mÃƒÆ’Ã‚Â©todo
 	::SetContentType("application/json")
 	IF oJson:GetJSonObject('metodo') == "/incluirFamilia"
 		IF !EMPTY(oJson['data']['codigoFamilia'])
@@ -221,7 +221,7 @@ AY0 5 FORMATO
 			For nIt := 1 To Len(aItens)
 				_cCodProd := PadR(aItens[nIt]['subProduto'],TamSX3("B1_COD")[1])
 				if !EMPTY(_cCodProd)
-					// Faço o Decode do BASE64 direto para o arquivo tst_1.jpg (a descompactação já é tratada automaticamente)
+					// FaÃƒÂ§o o Decode do BASE64 direto para o arquivo tst_1.jpg (a descompactaÃƒÂ§ÃƒÂ£o jÃƒÂ¡ ÃƒÂ© tratada automaticamente)
 					IF !EMPTY(oJson['data']['imagemBase64'])
 						cDecode64 := Decode64(oJson['data']['imagemBase64'],"\fotos\"+ALLTRIM(_cCodProd)+".jpg",.F.)
 					ENDIF
@@ -283,7 +283,7 @@ AY0 5 FORMATO
 						SB1->B1_PRN944I:= "S"
 						SB1->B1_01CODMA:= ""
 						SB1->B1_ATUAPRC:= "S"
-						SB1->B1_ZINATCDN := IIF(PadR(oJson['data']['inativo'],"S","N")
+						SB1->B1_ZINATCD := IIF(oJson['data']['inativo'],"S","N")
 
 						SB1->(MsUnLock())
 					ELSE
@@ -348,7 +348,7 @@ AY0 5 FORMATO
 						endif
 
 
-                        SB1->B1_ZINATCDN := IIF(PadR(oJson['data']['inativo'],"S","N")
+						SB1->B1_ZINATCD := IIF(oJson['data']['inativo'],"S","N")
 
 						SB1->(MsUnLock())
 
@@ -483,7 +483,7 @@ TABELA W 37%
 
 						SB4->(MsUnLock())
 					ENDIF
-						
+
 				endif
 			Next nIt
 			::SetResponse(oJson:toJSON())
@@ -516,7 +516,7 @@ Static Function cadGrupo(_cCod,_cDesc)
 		SBM->BM_GRUPO  := _cGruPro
 		SBM->BM_DESC   := Upper(NoAcento(_cDesc))
 		SBM->BM_CDNET  := _cCod
-		SBM->(MsUnLock())   
+		SBM->(MsUnLock())
 	endif
 
 Return _cdNew
@@ -725,12 +725,12 @@ Local cChar  := ""
 Local nX     := 0
 Local nY     := 0
 Local cVogal := "aeiouAEIOU"
-Local cAgudo := "áéíóú"+"ÁÉÍÓÚ"
-Local cCircu := "âêîôû"+"ÂÊÎÔÛ"
-Local cTrema := "äëïöü"+"ÄËÏÖÜ"
-Local cCrase := "àèìòù"+"ÀÈÌÒÙ"
-Local cTio   := "ãõÃÕ"
-Local cCecid := "çÇ"
+Local cAgudo := "ÃƒÂ¡ÃƒÂ©ÃƒÂ­ÃƒÂ³ÃƒÂº"+"Ãƒï¿½Ãƒâ€°Ãƒï¿½Ãƒâ€œÃƒÅ¡"
+Local cCircu := "ÃƒÂ¢ÃƒÂªÃƒÂ®ÃƒÂ´ÃƒÂ»"+"Ãƒâ€šÃƒÅ ÃƒÅ½Ãƒâ€�Ãƒâ€º"
+Local cTrema := "ÃƒÂ¤ÃƒÂ«ÃƒÂ¯ÃƒÂ¶ÃƒÂ¼"+"Ãƒâ€žÃƒâ€¹Ãƒï¿½Ãƒâ€“ÃƒÅ“"
+Local cCrase := "ÃƒÂ ÃƒÂ¨ÃƒÂ¬ÃƒÂ²ÃƒÂ¹"+"Ãƒâ‚¬ÃƒË†ÃƒÅ’Ãƒâ€™Ãƒâ„¢"
+Local cTio   := "ÃƒÂ£ÃƒÂµÃƒÆ’Ãƒâ€¢"
+Local cCecid := "ÃƒÂ§Ãƒâ€¡"
 Local cMaior := "&lt;"
 Local cMenor := "&gt;"
 

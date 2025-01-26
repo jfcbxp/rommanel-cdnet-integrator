@@ -30,7 +30,7 @@ update-product:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${CRON_VALUE:0 0/1 * * * *}
+    cron-value: ${CRON_VALUE:0 0/2 * * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
@@ -39,7 +39,7 @@ update-inventory:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${CRON_VALUE:0 0/10 1-8 * * *}
+    cron-value: ${CRON_VALUE:0 0/10 12-13 * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
@@ -48,7 +48,7 @@ update-ecommerce-inventory:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${UPDATE_ECOMMERCE_INVENTORY_CRON_VALUE:0 */10 1-6 * * *}
+    cron-value: ${CRON_VALUE:0 */10 12-13 * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
@@ -57,7 +57,7 @@ update-sale:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${CRON_VALUE:0 */10 1-8 * * *}
+    cron-value: ${CRON_VALUE:0 */10 12-13 * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
