@@ -36,7 +36,7 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
 
     @Override
     @Transactional(rollbackOn = Exception.class)
-    public void updateInventory(String warehouseCode) {
+    public void updateInventory(String companyCode, String warehouseCode) {
         log.info("CdNetInventoryServiceImpl.updateInventory - Start");
 
         var sortBy = Sort.by(Sort.Direction.valueOf(CdnetInternalParams.PAGINATE_SORT_DIRECTION_DEFAULT),
@@ -45,7 +45,7 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
         var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
 
 
-        var products = repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, null, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
+        var products = repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, companyCode, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
                 page);
 
         if (!products.isEmpty()) {
@@ -60,7 +60,7 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
 
     private void sendInventory(ProductInventory productInventory, String token) {
         var product = mapper.map(productInventory, CdNetInventoryRequest.class);
-        
+
         var response = client.updateInventory(token, product);
         if (response.success() || response.statusCode().equals(CdnetInternalParams.PRODUCT_NOT_FOUND_ERROR_CODE)) {
             repository.updateIntegration(productInventory.getProductCode(), productInventory.getWarehouseCode(),
@@ -74,15 +74,18 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
     }
 
     @Override
-    public void updateInventoryList(String companyCode, String warehouseCode) {
+    public void updateInventoryList(String warehouseCode) {
         log.info("CdNetInventoryServiceImpl.updateInventoryList - Start");
 
         try {
             var token = authService.getToken();
-            var products = this.findOutOfSyncProducts(companyCode, warehouseCode);
+            var products = this.findOutOfSyncProducts(warehouseCode);
 
-            if (!products.isEmpty())
-                client.updateInventoryList(token, products);
+            if (!products.isEmpty()) {
+                var result = client.updateInventoryList(token, products);
+                log.info("CdNetInventoryServiceImpl.updateInventoryList - complete {}", result);
+            }
+
 
         } catch (
                 Exception e) {
@@ -93,18 +96,20 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
     }
 
     @Transactional(rollbackOn = Exception.class)
-    private List<CdNetInventoryRequest> findOutOfSyncProducts(String companyCode, String warehouseCode) {
+    private List<CdNetInventoryRequest> findOutOfSyncProducts(String warehouseCode) {
         log.info("CdNetInventoryServiceImpl.findOutOfSyncProducts - Start");
 
         var sortBy = Sort.by(Sort.Direction.valueOf(CdnetInternalParams.PAGINATE_SORT_DIRECTION_DEFAULT),
                 CdnetInternalParams.PAGINATE_SORT_PRODUCT_INVENTORY_PROPERTIES_DEFAULT);
 
-        var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_ROWS_DEFAULT, sortBy);
+        var page = PageRequest.of(CdnetInternalParams.PAGINATE_PAGE_DEFAULT, CdnetInternalParams.PAGINATE_INVENTORY_ROWS_DEFAULT, sortBy);
 
-        return repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, companyCode, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
+        return repository.findAll(ProductInventorySpecification.findByCriteria(warehouseCode, null, featureManager.isActive(PRODUCT_INVENTORY_ONLY_OUT_OF_SYNC)),
                 page).stream().map(productInventory -> {
+
             repository.updateIntegration(productInventory.getProductCode(), productInventory.getWarehouseCode(),
                     productInventory.getCompanyCode(), productInventory.getStock());
+            
             return mapper.map(productInventory, CdNetInventoryRequest.class);
         }).toList();
 

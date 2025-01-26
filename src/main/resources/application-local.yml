@@ -44,6 +44,15 @@ update-inventory:
     most-lock-time: PT1M
     limit-rows: 200
 
+update-ecommerce-inventory:
+  max-retires: 10
+  pulse-interval: 5
+  scheduler:
+    cron-value: ${UPDATE_ECOMMERCE_INVENTORY_CRON_VALUE:0 */10 1-6 * * *}
+    least-lock-time: PT30s
+    most-lock-time: PT1M
+    limit-rows: 200
+
 update-sale:
   max-retires: 10
   pulse-interval: 5
