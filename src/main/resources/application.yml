@@ -101,8 +101,8 @@ cdnet:
   base-protheus-url: ${CDNET_BASE_PROTHEUS_URL:http://192.168.0.5:9095}
   loggerLevel: BASIC
   inventory:
-    ecommerce-company-code: "0107"
-    ecommerce-warehouse-code: "01"
+    ecommerce-company-code: ${CDNET_ECOMMERCE_COMPANY:0108}
+    ecommerce-warehouse-code: ${CDNET_ECOMMERCE_WAREHOUSE:01}
 
 togglz:
   console:
