@@ -62,6 +62,10 @@ public class CdNetInventoryServiceImpl implements CdnetInventoryService {
         var product = mapper.map(productInventory, CdNetInventoryRequest.class);
 
         var response = client.updateInventory(token, product);
+
+        log.info("CdNetInventoryServiceImpl.updateInventory - sending integration for product {} - data {}",
+                product.fullProductId(), product);
+
         if (response.success() || response.statusCode().equals(CdnetInternalParams.PRODUCT_NOT_FOUND_ERROR_CODE)) {
             repository.updateIntegration(productInventory.getProductCode(), productInventory.getWarehouseCode(),
                     productInventory.getCompanyCode(), productInventory.getStock());
