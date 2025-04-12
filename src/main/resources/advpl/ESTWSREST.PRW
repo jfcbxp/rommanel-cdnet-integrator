@@ -6,16 +6,16 @@
 User Function ESTWSREST()	
 Return
 
-WSRESTFUL ESTCDNET DESCRIPTION "ServiÃƒÆ’Ã‚Â§o REST para estoque"
+WSRESTFUL ESTCDNET DESCRIPTION "ServiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o REST para estoque"
 WSDATA METODO As String //String que vamos receber via URL
 
-WSMETHOD POST DESCRIPTION "Em caso de sucesso, retorna o mesmo objeto enviado" WSSYNTAX "/ESTCDNET || /ESTCDNET/{METODO}" //Disponibilizamos um mÃƒÆ’Ã‚Â©todo do tipo GET
+WSMETHOD POST DESCRIPTION "Em caso de sucesso, retorna o mesmo objeto enviado" WSSYNTAX "/ESTCDNET || /ESTCDNET/{METODO}" //Disponibilizamos um mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©todo do tipo GET
 
 END WSRESTFUL
 
 WSMETHOD POST WSRECEIVE METODO WSSERVICE ESTCDNET
 	//--> Recuperamos o produto informado via URL
-	//--> Podemos fazer dessa forma ou utilizando o atributo ::aUrlParms, que ÃƒÆ’Ã‚Â© um array com os parÃƒÆ’Ã‚Â¢metros recebidos via URL (QueryString)
+	//--> Podemos fazer dessa forma ou utilizando o atributo ::aUrlParms, que ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© um array com os parÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢metros recebidos via URL (QueryString)
 	Local cBody := ::GetContent()
 	Local aArea		:= GetArea()
 	Local aItens
@@ -35,7 +35,7 @@ AY0 5 FORMATO
  CAMPANHA AY2
 */
 
-	// define o tipo de retorno do mÃƒÆ’Ã‚Â©todo
+	// define o tipo de retorno do mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©todo
 	::SetContentType("application/json")
 	IF oJson:GetJSonObject('metodo') == "/incluirFamilia"
 		IF !EMPTY(oJson['data']['codigoFamilia'])
@@ -153,6 +153,53 @@ AY0 5 FORMATO
 			::SetResponse(oJson:toJSON())
 
 		ENDIF
+
+	ELSEIF oJson:GetJSonObject('metodo') == "/deletaSaldoCompra"
+
+			_cSql := " UPDATE "+RETSQLNAME("ZAD")+" SET D_E_L_E_T_ = '*',R_E_C_D_E_L_ = R_E_C_N_O_  "
+			TCSQLEXEC(_cSql)
+
+			CONOUT("EXCLUINDO SALDOS ")
+
+			::SetResponse(oJson:toJSON())
+
+
+	ELSEIF oJson:GetJSonObject('metodo') == "/incluirSaldoCompra"
+		IF !EMPTY(oJson['data']['cnpj'])
+			cCnpj := Alltrim(oJson['data']['cnpj'])
+			cCnpj := StrTran(cCnpj,'.','')
+			cCnpj := StrTran(cCnpj,'-','')
+			cCnpj := StrTran(cCnpj,'/','')
+			_cFilDes := ""
+
+			SM0->(DbGoTop())
+			DO WHILE !SM0->(Eof())
+				if ALLTRIM(SM0->M0_CGC) = cCnpj
+					_cFilDes :=  PadR(SM0->M0_CODFIL,4)
+					exit
+				endif
+				SM0->(DbSkip())
+			ENDDO
+			DbSelectArea("ZAD")
+			ZAD->(DbSetOrder(1))
+			RecLock("ZAD",.T.)
+				ZAD->ZAD_FILIAL  := _cFilDes
+				ZAD->ZAD_CODIGO  := PadR(oJson['data']['codigoProdutoCompleto'],TamSX3("ZAD_CODIGO")[1])
+				ZAD->ZAD_PEDFAB  := PadR(oJson['data']['codigoPedido'],TamSX3("ZAD_PEDFAB")[1])
+				ZAD->ZAD_PEDWEB  := PadR(oJson['data']['codigoPedidoWeb'],TamSX3("ZAD_PEDWEB")[1])
+				ZAD->ZAD_DTPEDI  := CTOD(oJson['data']['dataPedido'])
+				ZAD->ZAD_DTPEDA  := CTOD(oJson['data']['dataAgendamento'])
+				ZAD->ZAD_SALDO 	 := oJson['data']['saldo']
+				ZAD->ZAD_VLUNIT  := oJson['data']['valorUnitario']
+				ZAD->ZAD_TOTAL   := oJson['data']['saldo'] * oJson['data']['valorUnitario']
+
+			ZAD->(MsUnLock())
+			CONOUT("CADASTRANDO SALDO "+_cFilDes+" pedido"+oJson['data']['codigoPedido']+ "produto"+ oJson['data']['codigoProdutoCompleto'])
+
+
+			::SetResponse(oJson:toJSON())
+
+		ENDIF
 	ELSEIF oJson:GetJSonObject('metodo') == "/incluirNotaFiscalDistribuidor"
 		IF !EMPTY(oJson['notaFiscalCDNet']['chave'])
 			aItens := oJson['notaFiscalCDNet']['itens']
@@ -221,7 +268,7 @@ AY0 5 FORMATO
 			For nIt := 1 To Len(aItens)
 				_cCodProd := PadR(aItens[nIt]['subProduto'],TamSX3("B1_COD")[1])
 				if !EMPTY(_cCodProd)
-					// FaÃƒÂ§o o Decode do BASE64 direto para o arquivo tst_1.jpg (a descompactaÃƒÂ§ÃƒÂ£o jÃƒÂ¡ ÃƒÂ© tratada automaticamente)
+					// FaÃƒÆ’Ã‚Â§o o Decode do BASE64 direto para o arquivo tst_1.jpg (a descompactaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o jÃƒÆ’Ã‚Â¡ ÃƒÆ’Ã‚Â© tratada automaticamente)
 					IF !EMPTY(oJson['data']['imagemBase64'])
 						cDecode64 := Decode64(oJson['data']['imagemBase64'],"\fotos\"+ALLTRIM(_cCodProd)+".jpg",.F.)
 					ENDIF
@@ -725,12 +772,12 @@ Local cChar  := ""
 Local nX     := 0
 Local nY     := 0
 Local cVogal := "aeiouAEIOU"
-Local cAgudo := "ÃƒÂ¡ÃƒÂ©ÃƒÂ­ÃƒÂ³ÃƒÂº"+"Ãƒï¿½Ãƒâ€°Ãƒï¿½Ãƒâ€œÃƒÅ¡"
-Local cCircu := "ÃƒÂ¢ÃƒÂªÃƒÂ®ÃƒÂ´ÃƒÂ»"+"Ãƒâ€šÃƒÅ ÃƒÅ½Ãƒâ€�Ãƒâ€º"
-Local cTrema := "ÃƒÂ¤ÃƒÂ«ÃƒÂ¯ÃƒÂ¶ÃƒÂ¼"+"Ãƒâ€žÃƒâ€¹Ãƒï¿½Ãƒâ€“ÃƒÅ“"
-Local cCrase := "ÃƒÂ ÃƒÂ¨ÃƒÂ¬ÃƒÂ²ÃƒÂ¹"+"Ãƒâ‚¬ÃƒË†ÃƒÅ’Ãƒâ€™Ãƒâ„¢"
-Local cTio   := "ÃƒÂ£ÃƒÂµÃƒÆ’Ãƒâ€¢"
-Local cCecid := "ÃƒÂ§Ãƒâ€¡"
+Local cAgudo := "ÃƒÆ’Ã‚Â¡ÃƒÆ’Ã‚Â©ÃƒÆ’Ã‚Â­ÃƒÆ’Ã‚Â³ÃƒÆ’Ã‚Âº"+"ÃƒÆ’Ã¯Â¿Â½ÃƒÆ’Ã¢â‚¬Â°ÃƒÆ’Ã¯Â¿Â½ÃƒÆ’Ã¢â‚¬Å“ÃƒÆ’Ã…Â¡"
+Local cCircu := "ÃƒÆ’Ã‚Â¢ÃƒÆ’Ã‚ÂªÃƒÆ’Ã‚Â®ÃƒÆ’Ã‚Â´ÃƒÆ’Ã‚Â»"+"ÃƒÆ’Ã¢â‚¬Å¡ÃƒÆ’Ã…Â ÃƒÆ’Ã…Â½ÃƒÆ’Ã¢â‚¬ï¿½ÃƒÆ’Ã¢â‚¬Âº"
+Local cTrema := "ÃƒÆ’Ã‚Â¤ÃƒÆ’Ã‚Â«ÃƒÆ’Ã‚Â¯ÃƒÆ’Ã‚Â¶ÃƒÆ’Ã‚Â¼"+"ÃƒÆ’Ã¢â‚¬Å¾ÃƒÆ’Ã¢â‚¬Â¹ÃƒÆ’Ã¯Â¿Â½ÃƒÆ’Ã¢â‚¬â€œÃƒÆ’Ã…â€œ"
+Local cCrase := "ÃƒÆ’Ã‚Â ÃƒÆ’Ã‚Â¨ÃƒÆ’Ã‚Â¬ÃƒÆ’Ã‚Â²ÃƒÆ’Ã‚Â¹"+"ÃƒÆ’Ã¢â€šÂ¬ÃƒÆ’Ã‹â€ ÃƒÆ’Ã…â€™ÃƒÆ’Ã¢â‚¬â„¢ÃƒÆ’Ã¢â€žÂ¢"
+Local cTio   := "ÃƒÆ’Ã‚Â£ÃƒÆ’Ã‚ÂµÃƒÆ’Ã†â€™ÃƒÆ’Ã¢â‚¬Â¢"
+Local cCecid := "ÃƒÆ’Ã‚Â§ÃƒÆ’Ã¢â‚¬Â¡"
 Local cMaior := "&lt;"
 Local cMenor := "&gt;"
 

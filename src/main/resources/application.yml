@@ -60,6 +60,15 @@ update-product:
     most-lock-time: PT1M
     limit-rows: 200
 
+update-purchase:
+  max-retires: 10
+  pulse-interval: 5
+  scheduler:
+    cron-value: ${UPDATE_PURCHASE_CRON_VALUE:0 8 * * * }
+    least-lock-time: PT30s
+    most-lock-time: PT1M
+    limit-rows: 200
+
 update-ecommerce-inventory:
   max-retires: 10
   pulse-interval: 5
@@ -97,6 +106,7 @@ cdnet:
   authentication-server-url: ${CDNET_AUTH_URL:https://login.rommanel.com.br}
   base-server-url: ${CDNET_BASE_URL:https://distribuidor.cdnetweb.com.br}
   base-product-url: ${CDNET_BASE_PRODUCT_URL:https://produto.cdnetweb.com.br}
+  base-purchase-url: ${CDNET_BASE_PRODUCT_URL:https://pedido.cdnetweb.com.br}
   base-product-photo-url: ${CDNET_BASE_PRODUCT_PHOTO_URL:https://storage.googleapis.com}
   base-protheus-url: ${CDNET_BASE_PROTHEUS_URL:http://192.168.0.5:9095}
   loggerLevel: BASIC
