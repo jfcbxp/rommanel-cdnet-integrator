@@ -64,7 +64,7 @@ update-purchase:
   max-retires: 10
   pulse-interval: 5
   scheduler:
-    cron-value: ${UPDATE_PURCHASE_CRON_VALUE:0 8 * * * }
+    cron-value: ${UPDATE_PURCHASE_CRON_VALUE:0 */30 16-17 * * *}
     least-lock-time: PT30s
     most-lock-time: PT1M
     limit-rows: 200
