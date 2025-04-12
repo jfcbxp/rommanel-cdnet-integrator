@@ -31,10 +31,15 @@ public class CdNetPurchaseServiceImpl implements CdnetPurchaseService {
         log.info("CdNetPurchaseServiceImpl.syncPurchase - Start");
         var token = authService.getToken();
 
-        companyRepository.findAll().forEach(company -> {
-            syncPurchaseBalance(token, company.getIdentification());
-        });
+        protheusClient.sendPurchase(new ProtheusRequest(DEFAULT_DELETE_PURCHASE_PROTHEUS_ENDPOINT, true));
 
+        try {
+            companyRepository.findAll().forEach(company -> {
+                syncPurchaseBalance(token, company.getIdentification());
+            });
+        } catch (Exception e) {
+            log.error("CdNetPurchaseServiceImpl.syncPurchaseBalance - sendPurchase error ", e);
+        }
 
         log.info("CdNetPurchaseServiceImpl.syncPurchase - End");
 
@@ -42,8 +47,6 @@ public class CdNetPurchaseServiceImpl implements CdnetPurchaseService {
 
     private void syncPurchaseBalance(String token, String identification) {
         log.info("CdNetPurchaseServiceImpl.syncPurchaseBalance - Start");
-
-        protheusClient.sendPurchase(new ProtheusRequest(DEFAULT_DELETE_PURCHASE_PROTHEUS_ENDPOINT, true));
 
         var response = client.getAvailablePurchaseBalance(token, identification, 1, PAGINATE_ROWS_DEFAULT).data();
 

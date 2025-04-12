@@ -182,6 +182,8 @@ AY0 5 FORMATO
 			ENDDO
 			DbSelectArea("ZAD")
 			ZAD->(DbSetOrder(1))
+			CONOUT("CADASTRANDO SALDO "+_cFilDes+" pedido:"+oJson['data']['codigoPedido']+ "produto:"+ oJson['data']['codigoProdutoCompleto']+ "data:"+oJson['data']['dataPedido'])
+
 			RecLock("ZAD",.T.)
 				ZAD->ZAD_FILIAL  := _cFilDes
 				ZAD->ZAD_CODIGO  := PadR(oJson['data']['codigoProdutoCompleto'],TamSX3("ZAD_CODIGO")[1])
@@ -194,7 +196,6 @@ AY0 5 FORMATO
 				ZAD->ZAD_TOTAL   := oJson['data']['saldo'] * oJson['data']['valorUnitario']
 
 			ZAD->(MsUnLock())
-			CONOUT("CADASTRANDO SALDO "+_cFilDes+" pedido"+oJson['data']['codigoPedido']+ "produto"+ oJson['data']['codigoProdutoCompleto'])
 
 
 			::SetResponse(oJson:toJSON())

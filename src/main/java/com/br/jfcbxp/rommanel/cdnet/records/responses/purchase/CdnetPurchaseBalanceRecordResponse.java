@@ -1,7 +1,12 @@
 package com.br.jfcbxp.rommanel.cdnet.records.responses.purchase;
 
+import com.br.jfcbxp.rommanel.cdnet.constants.CdnetInternalParams;
+import com.br.jfcbxp.rommanel.cdnet.converters.LocalDateFromDateTimeDeserializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record CdnetPurchaseBalanceRecordResponse(
         String razaoSocial,
@@ -12,8 +17,18 @@ public record CdnetPurchaseBalanceRecordResponse(
         String codigoPedido,
         String codigoPedidoWeb,
         String codigoStatus,
-        LocalDateTime dataPedido,
-        LocalDateTime dataAgendamento,
+        @JsonFormat(
+                pattern = CdnetInternalParams.DATE_PARAMETER_FORMAT_RESPONSE_PATTERN,
+                shape = JsonFormat.Shape.STRING
+        )
+        @JsonDeserialize(using = LocalDateFromDateTimeDeserializer.class)
+        LocalDate dataPedido,
+        @JsonFormat(
+                pattern = CdnetInternalParams.DATE_PARAMETER_FORMAT_RESPONSE_PATTERN,
+                shape = JsonFormat.Shape.STRING
+        )
+        @JsonDeserialize(using = LocalDateFromDateTimeDeserializer.class)
+        LocalDate dataAgendamento,
         Integer saldo,
         BigDecimal valorUnitario,
         String observacao
