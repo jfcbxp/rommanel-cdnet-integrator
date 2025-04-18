@@ -6,16 +6,15 @@
 User Function ESTWSREST()	
 Return
 
-WSRESTFUL ESTCDNET DESCRIPTION "ServiÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§o REST para estoque"
+WSRESTFUL ESTCDNET DESCRIPTION "Servico REST para estoque"
 WSDATA METODO As String //String que vamos receber via URL
 
-WSMETHOD POST DESCRIPTION "Em caso de sucesso, retorna o mesmo objeto enviado" WSSYNTAX "/ESTCDNET || /ESTCDNET/{METODO}" //Disponibilizamos um mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©todo do tipo GET
+WSMETHOD POST DESCRIPTION "Em caso de sucesso, retorna o mesmo objeto enviado" WSSYNTAX "/ESTCDNET || /ESTCDNET/{METODO}"
 
 END WSRESTFUL
 
 WSMETHOD POST WSRECEIVE METODO WSSERVICE ESTCDNET
 	//--> Recuperamos o produto informado via URL
-	//--> Podemos fazer dessa forma ou utilizando o atributo ::aUrlParms, que ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â© um array com os parÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢metros recebidos via URL (QueryString)
 	Local cBody := ::GetContent()
 	Local aArea		:= GetArea()
 	Local aItens
@@ -35,7 +34,6 @@ AY0 5 FORMATO
  CAMPANHA AY2
 */
 
-	// define o tipo de retorno do mÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©todo
 	::SetContentType("application/json")
 	IF oJson:GetJSonObject('metodo') == "/incluirFamilia"
 		IF !EMPTY(oJson['data']['codigoFamilia'])
@@ -189,6 +187,7 @@ AY0 5 FORMATO
 				ZAD->ZAD_CODIGO  := PadR(oJson['data']['codigoProdutoCompleto'],TamSX3("ZAD_CODIGO")[1])
 				ZAD->ZAD_PEDFAB  := PadR(oJson['data']['codigoPedido'],TamSX3("ZAD_PEDFAB")[1])
 				ZAD->ZAD_PEDWEB  := PadR(oJson['data']['codigoPedidoWeb'],TamSX3("ZAD_PEDWEB")[1])
+				ZAD->ZAD_STATUS  := PadR(oJson['data']['codigoStatus'],TamSX3("ZAD_STATUS")[1])
 				ZAD->ZAD_DTPEDI  := CTOD(oJson['data']['dataPedido'])
 				ZAD->ZAD_DTPEDA  := CTOD(oJson['data']['dataAgendamento'])
 				ZAD->ZAD_SALDO 	 := oJson['data']['saldo']
@@ -269,7 +268,6 @@ AY0 5 FORMATO
 			For nIt := 1 To Len(aItens)
 				_cCodProd := PadR(aItens[nIt]['subProduto'],TamSX3("B1_COD")[1])
 				if !EMPTY(_cCodProd)
-					// FaÃƒÆ’Ã‚Â§o o Decode do BASE64 direto para o arquivo tst_1.jpg (a descompactaÃƒÆ’Ã‚Â§ÃƒÆ’Ã‚Â£o jÃƒÆ’Ã‚Â¡ ÃƒÆ’Ã‚Â© tratada automaticamente)
 					IF !EMPTY(oJson['data']['imagemBase64'])
 						cDecode64 := Decode64(oJson['data']['imagemBase64'],"\fotos\"+ALLTRIM(_cCodProd)+".jpg",.F.)
 					ENDIF
@@ -773,12 +771,12 @@ Local cChar  := ""
 Local nX     := 0
 Local nY     := 0
 Local cVogal := "aeiouAEIOU"
-Local cAgudo := "ÃƒÆ’Ã‚Â¡ÃƒÆ’Ã‚Â©ÃƒÆ’Ã‚Â­ÃƒÆ’Ã‚Â³ÃƒÆ’Ã‚Âº"+"ÃƒÆ’Ã¯Â¿Â½ÃƒÆ’Ã¢â‚¬Â°ÃƒÆ’Ã¯Â¿Â½ÃƒÆ’Ã¢â‚¬Å“ÃƒÆ’Ã…Â¡"
-Local cCircu := "ÃƒÆ’Ã‚Â¢ÃƒÆ’Ã‚ÂªÃƒÆ’Ã‚Â®ÃƒÆ’Ã‚Â´ÃƒÆ’Ã‚Â»"+"ÃƒÆ’Ã¢â‚¬Å¡ÃƒÆ’Ã…Â ÃƒÆ’Ã…Â½ÃƒÆ’Ã¢â‚¬ï¿½ÃƒÆ’Ã¢â‚¬Âº"
-Local cTrema := "ÃƒÆ’Ã‚Â¤ÃƒÆ’Ã‚Â«ÃƒÆ’Ã‚Â¯ÃƒÆ’Ã‚Â¶ÃƒÆ’Ã‚Â¼"+"ÃƒÆ’Ã¢â‚¬Å¾ÃƒÆ’Ã¢â‚¬Â¹ÃƒÆ’Ã¯Â¿Â½ÃƒÆ’Ã¢â‚¬â€œÃƒÆ’Ã…â€œ"
-Local cCrase := "ÃƒÆ’Ã‚Â ÃƒÆ’Ã‚Â¨ÃƒÆ’Ã‚Â¬ÃƒÆ’Ã‚Â²ÃƒÆ’Ã‚Â¹"+"ÃƒÆ’Ã¢â€šÂ¬ÃƒÆ’Ã‹â€ ÃƒÆ’Ã…â€™ÃƒÆ’Ã¢â‚¬â„¢ÃƒÆ’Ã¢â€žÂ¢"
-Local cTio   := "ÃƒÆ’Ã‚Â£ÃƒÆ’Ã‚ÂµÃƒÆ’Ã†â€™ÃƒÆ’Ã¢â‚¬Â¢"
-Local cCecid := "ÃƒÆ’Ã‚Â§ÃƒÆ’Ã¢â‚¬Â¡"
+Local cAgudo := "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â­ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â³ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Âº"+"ÃƒÆ’Ã†â€™ÃƒÂ¯Ã‚Â¿Ã‚Â½ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°ÃƒÆ’Ã†â€™ÃƒÂ¯Ã‚Â¿Ã‚Â½ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â¡"
+Local cCircu := "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚ÂªÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â®ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â´ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â»"+"ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â ÃƒÆ’Ã†â€™Ãƒâ€¦Ã‚Â½ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¯Â¿Â½ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Âº"
+Local cTrema := "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¤ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â«ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¯ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¶ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¼"+"ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¹ÃƒÆ’Ã†â€™ÃƒÂ¯Ã‚Â¿Ã‚Â½ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ÃƒÆ’Ã†â€™Ãƒâ€¦Ã¢â‚¬Å“"
+Local cCrase := "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¨ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â²ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¹"+"ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€¹Ã¢â‚¬Â ÃƒÆ’Ã†â€™Ãƒâ€¦Ã¢â‚¬â„¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢"
+Local cTio   := "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â£ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚ÂµÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢"
+Local cCecid := "ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¡"
 Local cMaior := "&lt;"
 Local cMenor := "&gt;"
 
